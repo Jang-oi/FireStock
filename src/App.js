@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import {Routes, Route} from 'react-router-dom';
+import * as React from 'react'
+import {Reset} from 'styled-reset'
+import {Fragment} from "react";
+import './App.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Main from "./pages/Main/Main";
+import Menubar from "./components/Menubar";
+import SignIn from "./pages/SignIn/SignIn";
+import SignUp from "./pages/SignUp/SignUp";
+import Portfolios from "./pages/Portfolios/Portfolios";
+import NotFound from "./pages/NotFound/NotFound";
+import PrivateRoute from "./router/PrivateRoute";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    return (
+        <Fragment>
+            <Reset/>
+            <Menubar/>
+            <Routes>
+                <Route path="/" element={<PrivateRoute/>}>
+                    <Route path="/" element={<Main/>}/>
+                    <Route path="/portfolios" element={<Portfolios/>}/>
+                </Route>
+                <Route path="/sign-in" element={<SignIn/>}/>
+                <Route path="/sign-up" element={<SignUp/>}/>
+                <Route path="*" element={<NotFound/>}/>
+            </Routes>
+        </Fragment>
+    );
 }
-
 export default App;
