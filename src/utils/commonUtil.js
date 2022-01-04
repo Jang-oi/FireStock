@@ -5,7 +5,7 @@ import {getReturnCode, getReturnMessage} from "./stringUtil";
 
 /**
  * axios 옵션 설정
- * @type {AxiosInstance}
+ * @type {Axios}
  */
 export const customAxios = axios.create({
     baseURL: 'http://localhost:8080/api/v1',
