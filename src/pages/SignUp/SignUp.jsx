@@ -1,9 +1,8 @@
 import {useNavigate} from "react-router-dom";
 import {Button, FloatingLabel, Form} from "react-bootstrap";
-import './SignUp.scss'
+import 'styles/Sign.scss'
 import {useState} from "react";
-import {customAxios, customAlert} from "utils/commonUtil";
-import {getReturnCode, getReturnMessage} from "utils/stringUtil";
+import {axiosCall} from "utils/commonUtil";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -61,47 +60,24 @@ const SignUp = () => {
      */
     const onSubmitHandler = (e) => {
         e.preventDefault();
-
         let registerData = {
             _id     : id,
             password: pw
         }
-
-        // TODO 유니다큐의 함수 방식으로 하나 생각해보자..
-        customAxios.post('auth/join', registerData)
-            .then(response => {
-                const returnCode = getReturnCode(response);
-                const returnMsg = getReturnMessage(response);
-                switch (returnCode) {
-                    case 0: {
-                        customAlert({
-                            icon : 'success',
-                            title: returnMsg
-                        }).then(() => navigate('/sign-in'));
-                        break;
-                    }
-                    case -1: {
-                        customAlert({
-                            icon : 'error',
-                            title: returnMsg
-                        })
-                        break;
-                    }
-                    default:
-                        break;
-                }
-            })
+        axiosCall.post('auth/join', registerData, function() {
+            navigate('/sign-in');
+        })
     }
 
     return (
         <div className="main-Container">
             <div className="inner-Container">
                 <Form className={"form-Container"}>
-                    <FloatingLabel controlId="registerId" label="아이디를 입력해주세요." className="mb-3">
+                    <FloatingLabel controlId="signUpId" label="아이디를 입력해주세요." className="mb-3">
                         <Form.Control type="text" placeholder="id" value={id} onChange={onIdHandler}/>
                         <Form.Text className={`message ${isId ? 'true' : 'false'}`}>{idMsg}</Form.Text>
                     </FloatingLabel>
-                    <FloatingLabel controlId="registerPassword" label="비밀번호를 입력해주세요." className="mb-3">
+                    <FloatingLabel controlId="signUpPw" label="비밀번호를 입력해주세요." className="mb-3">
                         <Form.Control type="password" placeholder="password" value={pw} onChange={onPwHandler}/>
                         <Form.Text className={`message ${isPw ? 'true' : 'false'}`}>{pwMsg}</Form.Text>
                     </FloatingLabel>
