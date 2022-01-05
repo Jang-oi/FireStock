@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content';
-import {getReturnCode, getReturnMessage} from "./stringUtil";
+import {getReturnCode, getReturnMessage, makeUrlParameter} from "./stringUtil";
 
 /**
  * axios 옵션 설정
@@ -18,7 +18,7 @@ export const customAxios = axios.create({
  * @param callBackFn
  * @param errorCallBackFn
  */
-function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
+export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
     const returnCode = getReturnCode(response);
     const returnMsg = getReturnMessage(response);
     switch (returnCode) {
@@ -49,7 +49,7 @@ function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
  * Axios 가 정상적으로 호출 되지 않았을 때의 로직
  * @param response
  */
-function defaultAxiosError(response) {
+export function defaultAxiosError(response) {
     customAlert({
         icon : 'error',
         title: '서버가 정상적이지 않습니다.'
@@ -66,7 +66,8 @@ export const axiosCall = {
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
             .catch(response => defaultAxiosError(response));
     },
-    get : (url, callBackFn, errorCallBackFn) => {
+    get : (url, param, callBackFn, errorCallBackFn) => {
+        if(param) url = makeUrlParameter(url, param);
         customAxios.get(url)
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
             .catch(response => defaultAxiosError(response));

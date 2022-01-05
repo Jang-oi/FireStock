@@ -3,8 +3,7 @@ import {Link} from "react-router-dom";
 
 const Menubar = () => {
 
-    // TODO 토큰 값 가져오는 것.
-    const isToken = false;
+    const isToken = localStorage.getItem('token')
 
     /**
      * 로그인 여부를 통해 조회되는 메뉴 리턴

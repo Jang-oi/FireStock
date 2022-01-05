@@ -60,11 +60,11 @@ const SignUp = () => {
      */
     const onSubmitHandler = (e) => {
         e.preventDefault();
-        let registerData = {
+        const signUpData = {
             _id     : id,
             password: pw
         }
-        axiosCall.post('auth/join', registerData, function() {
+        axiosCall.post('auth/join', signUpData, function() {
             navigate('/sign-in');
         })
     }

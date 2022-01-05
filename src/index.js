@@ -4,12 +4,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 
+/**
+ * 리덕스 적용
+ */
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import {logger} from "redux-logger/src";
+import rootReducer from './modules';
+
+const store = createStore(rootReducer, applyMiddleware(logger));
+
 ReactDOM.render(
-    <React.StrictMode>
-        <BrowserRouter>
+    <BrowserRouter>
+        <Provider store={store}>
             <App/>
-        </BrowserRouter>
-    </React.StrictMode>,
+        </Provider>
+    </BrowserRouter>,
     document.getElementById('root')
 );
 
