@@ -64,7 +64,7 @@ const SignUp = () => {
             _id     : id,
             password: pw
         }
-        axiosCall.post('auth/join', signUpData, function() {
+        axiosCall.post('auth/join', signUpData, function () {
             navigate('/sign-in');
         })
     }

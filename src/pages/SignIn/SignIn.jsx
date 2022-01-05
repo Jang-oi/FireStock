@@ -1,15 +1,17 @@
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import 'styles/Sign.scss'
 import {useEffect, useState} from "react";
-import {customAxios, defaultAxiosCall, defaultAxiosError} from "../../utils/commonUtil";
+import {customAxios, defaultAxiosCall, defaultAxiosError} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {setUserInfo} from "modules/userInfo";
-import {getReturnData} from "../../utils/stringUtil";
+import {getReturnData} from "utils/stringUtil";
 import {useCookies} from "react-cookie";
+import {useNavigate} from "react-router-dom";
 
 const SignIn = () => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -89,7 +91,7 @@ const SignIn = () => {
                     const returnData = getReturnData(response);
                     dispatch(setUserInfo(returnData));
                     localStorage.setItem('token', returnData.token);
-                    window.location.replace("/");
+                    navigate('/');
                 });
             })
             .catch(response => {

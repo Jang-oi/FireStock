@@ -67,7 +67,7 @@ export const axiosCall = {
             .catch(response => defaultAxiosError(response));
     },
     get : (url, param, callBackFn, errorCallBackFn) => {
-        if(param) url = makeUrlParameter(url, param);
+        if (param) url = makeUrlParameter(url, param);
         customAxios.get(url)
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
             .catch(response => defaultAxiosError(response));
