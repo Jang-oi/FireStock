@@ -11,13 +11,18 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {logger} from "redux-logger/src";
 import rootReducer from './modules';
+import {persistStore} from "redux-persist";
+import {PersistGate} from "redux-persist/integration/react";
 
 const store = createStore(rootReducer, applyMiddleware(logger));
+const persistor = persistStore(store);
 
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <App/>
+            <PersistGate loading={null} persistor={persistor}>
+                <App/>
+            </PersistGate>
         </Provider>
     </BrowserRouter>,
     document.getElementById('root')

@@ -15,8 +15,6 @@ import PrivateRoute from "./router/PrivateRoute";
 
 const App = () => {
 
-    // customAxios.defaults.headers['X-AUTH-TOKEN'] = isToken;
-
     /**
      * axios then 이나 catch 처리되기 전의 요청 응답의 공통 기능 처리
      */

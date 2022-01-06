@@ -79,12 +79,13 @@ const SignIn = () => {
      */
     const onSubmitHandler = (e) => {
         e.preventDefault();
-        if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
         const signInData = {
             _id     : id,
             password: pw
         }
-        axiosCall.post('auth/loing', signInData, function (returnData) {
+        console.log(id);
+        if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
+        axiosCall.post('auth/login', signInData, function (returnData) {
             dispatch(setUserInfo(returnData));
             localStorage.setItem('token', returnData.token);
             navigate('/');

@@ -12,6 +12,8 @@ export const customAxios = axios.create({
     timeout: 3000,
 });
 
+customAxios.defaults.headers['X-AUTH-TOKEN'] = localStorage.getItem('token');
+
 /**
  * Axios 가 정상적으로 호출 됐을 때의 로직
  * @param response

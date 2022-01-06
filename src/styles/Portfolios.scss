@@ -1,0 +1,24 @@
+.btn-Container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-Container button {
+  margin: 40px 10px;
+  width: 80%;
+}
+
+.card-header {
+  a {
+    text-decoration: none;
+    font-size: 24px;
+  }
+}
+
+.modal-content {
+  min-height: 600px;
+}
+
+.searchForm {
+  margin-bottom: 20px;
+}
