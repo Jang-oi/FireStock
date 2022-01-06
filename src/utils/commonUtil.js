@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content';
-import {getReturnCode, getReturnMessage, makeUrlParameter} from "./stringUtil";
+import {getReturnCode, getReturnData, getReturnMessage, makeUrlParameter} from "utils/stringUtil";
 
 /**
  * axios 옵션 설정
@@ -21,13 +21,14 @@ export const customAxios = axios.create({
 export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
     const returnCode = getReturnCode(response);
     const returnMsg = getReturnMessage(response);
+    const returnData = getReturnData(response);
     switch (returnCode) {
         case 0 : {
             customAlert({
                 icon : 'success',
                 title: returnMsg
             }).then(() => {
-                if (callBackFn) callBackFn()
+                if (callBackFn) callBackFn(returnData)
             })
             break;
         }

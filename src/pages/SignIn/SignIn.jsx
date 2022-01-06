@@ -1,10 +1,9 @@
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import 'styles/Sign.scss'
 import {useEffect, useState} from "react";
-import {customAxios, defaultAxiosCall, defaultAxiosError} from "utils/commonUtil";
+import {axiosCall} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {setUserInfo} from "modules/userInfo";
-import {getReturnData} from "utils/stringUtil";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
 
@@ -85,18 +84,11 @@ const SignIn = () => {
             _id     : id,
             password: pw
         }
-        customAxios.post('auth/login', signInData)
-            .then(response => {
-                defaultAxiosCall(response, function() {
-                    const returnData = getReturnData(response);
-                    dispatch(setUserInfo(returnData));
-                    localStorage.setItem('token', returnData.token);
-                    navigate('/');
-                });
-            })
-            .catch(response => {
-                defaultAxiosError(response);
-            })
+        axiosCall.post('auth/loing', signInData, function (returnData) {
+            dispatch(setUserInfo(returnData));
+            localStorage.setItem('token', returnData.token);
+            navigate('/');
+        })
     }
 
 
