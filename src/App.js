@@ -20,6 +20,7 @@ const App = () => {
      */
     customAxios.interceptors.request.use(
         config => {
+            config.headers['X-AUTH-TOKEN'] = localStorage.getItem('token');
             return config;
         },
         error => {

@@ -2,8 +2,8 @@ import 'styles/Portfolios.scss'
 import {Button} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
-import {axiosCall} from "../../utils/commonUtil";
-import {setPortFolioData} from "../../modules/portFolios";
+import {axiosCall} from "utils/commonUtil";
+import {setPortFolioData} from "modules/portFolios";
 
 const Portfolios = () => {
 
@@ -14,7 +14,7 @@ const Portfolios = () => {
         axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function(returnData) {
             dispatch(setPortFolioData(returnData.portFolioDetailMap));
         })
-    }, [])
+    }, [dispatch, userInfo._id])
 
     const portFolios = useSelector(store => store.portFolios.portData);
     console.log(portFolios);
