@@ -83,7 +83,6 @@ const SignIn = () => {
             _id     : id,
             password: pw
         }
-        console.log(id);
         if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
         axiosCall.post('auth/login', signInData, function (returnData) {
             dispatch(setUserInfo(returnData));

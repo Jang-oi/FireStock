@@ -48,13 +48,28 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
 
 /**
  * Axios 가 정상적으로 호출 되지 않았을 때의 로직
- * @param response
+ * status 403 토큰이 정상적이지 않은 값을 서버에 전달할 때
+ * @param error
  */
-export function defaultAxiosError(response) {
-    customAlert({
-        icon : 'error',
-        title: '서버가 정상적이지 않습니다.'
-    })
+export function defaultAxiosError(error) {
+    const errorStatus = error.response.status;
+    switch (errorStatus) {
+        case 403 :
+            customAlert({
+                icon : 'error',
+                title: '세션이 종료 되었습니다.'
+            }).then(() => {
+                localStorage.removeItem('token');
+                window.location.replace("/");
+            });
+            break;
+        default :
+            customAlert({
+                icon : 'error',
+                title: errorStatus
+            });
+            break;
+    }
 }
 
 /**
@@ -65,13 +80,13 @@ export const axiosCall = {
     post: (url, param, callBackFn, errorCallBackFn) => {
         customAxios.post(url, param)
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
-            .catch(response => defaultAxiosError(response));
+            .catch(error => defaultAxiosError(error));
     },
     get : (url, param, callBackFn, errorCallBackFn) => {
         if (param) url = makeUrlParameter(url, param);
         customAxios.get(url)
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
-            .catch(response => defaultAxiosError(response));
+            .catch(error => defaultAxiosError(error));
     }
 }
 
