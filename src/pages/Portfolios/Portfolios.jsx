@@ -9,6 +9,8 @@ import PortModal from "./PortModal";
 
 const Portfolios = () => {
 
+    // TODO 모아보기 진행.
+
     const dispatch = useDispatch();
 
     const [isModalShow, setIsModalShow] = useState(false);

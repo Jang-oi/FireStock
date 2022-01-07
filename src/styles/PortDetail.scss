@@ -1,0 +1,36 @@
+.detail-Left-Container {
+  float: left;
+  width: 30%;
+  position: fixed;
+}
+.detail-Right-Container {
+  float: right;
+  width: 50%;
+}
+
+.left-Assets-Container {
+
+}
+
+.left-Chart-Container {
+  width: 80%;
+  margin: auto;
+  padding-top: 30px;
+}
+
+.right-Stock-Container {
+  button {
+    width: 50%;
+  }
+}
+
+.right-Btn-Container {
+  margin-bottom: 3px;
+  button {
+    width: 50%;
+  }
+}
+
+.col {
+  margin: auto;
+}

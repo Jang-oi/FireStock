@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 
 import userInfo from "./userInfo";
 import portFolios from "./portFolios";
+import coinData from "./coinData";
 
 const persistConfig = {
     key : 'root',
@@ -14,7 +15,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     userInfo,
-    portFolios
+    portFolios,
+    coinData
 })
 
 export default persistReducer(persistConfig, rootReducer);
