@@ -51,10 +51,10 @@ const App = () => {
             for (let i = 0; i < returnData.length; i++) {
                 if (returnData[i].market.includes('KRW')) {
                     stockArray.push({
-                        currentPrice: Number(returnData[i].trade_price),
-                        stockName   : returnData[i].korean_name,
                         stockType   : 'coin',
-                        stockInfo   : returnData[i].market
+                        stockInfo   : returnData[i].market,
+                        stockName   : returnData[i].korean_name,
+                        currentPrice: Number(returnData[i].trade_price)
                     });
                 }
             }

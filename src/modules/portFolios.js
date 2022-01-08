@@ -5,7 +5,7 @@
 const SET_PORTFOLIO_DATA = 'portFolios/SET_PORTFOLIO_DATA';
 
 /**
- * 액셩 생성 함수
+ * 액션 생성 함수
  * @param portData
  * @returns {{portData, type: string}}
  */

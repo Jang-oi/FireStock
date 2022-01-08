@@ -34,9 +34,8 @@ const SignIn = () => {
     }, [cookies.saveId]);
 
     /**
-     *
+     * ID 입력 시 이벤트
      * @param e
-     * ID 입력 이벤트
      */
     const onIdHandler = (e) => {
         const currentId = e.currentTarget.value;
@@ -46,9 +45,8 @@ const SignIn = () => {
     }
 
     /**
-     *
-     * @param e
      * ID 저장하기 체크 이벤트
+     * @param e
      */
     const onIdSaveHandler = (e) => {
         const currentCheck = e.target.checked;
@@ -61,9 +59,8 @@ const SignIn = () => {
     }
 
     /**
-     *
-     * @param e
      * PW 입력 이벤트
+     * @param e
      */
     const onPwHandler = (e) => {
         const currentPw = e.currentTarget.value;
@@ -73,9 +70,8 @@ const SignIn = () => {
     }
 
     /**
-     *
-     * @param e
      * 로그인 버튼 클릭시 이벤트
+     * @param e
      */
     const onSubmitHandler = (e) => {
         e.preventDefault();

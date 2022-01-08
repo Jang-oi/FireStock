@@ -37,3 +37,25 @@ export function getReturnCode(response) {
 export function getReturnData(response) {
     return response.data.data;
 }
+
+/**
+ * 메세지에 대한 코드 값 입력하면 메세지 리턴
+ * @param msgCode
+ * @returns message {string}
+ */
+export function getMsg(msgCode) {
+    const message = {
+        sessionTimeOut: '세션이 종료 되었습니다.',
+        serverErrMsg  : '서버가 정상적이지 않습니다. 잠시 후 시도해주세요.',
+        all          : '전체',
+        domestic      : '국내',
+        overseas      : '해외',
+        coin          : '코인',
+        nonCurrent    : '그외 자산',
+        buy           : '종목 매수',
+        sell          : '종목 매도',
+        buyComplete   : '매수 성공',
+        sellComplete  : '매도 성공'
+    }
+    return message[msgCode];
+}

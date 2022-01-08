@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content';
-import {getReturnCode, getReturnData, getReturnMessage, makeUrlParameter} from "utils/stringUtil";
+import {getMsg, getReturnCode, getReturnData, getReturnMessage, makeUrlParameter} from "utils/stringUtil";
 
 /**
  * axios 옵션 설정
@@ -23,7 +23,7 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
     const returnMsg = getReturnMessage(response);
     const returnData = getReturnData(response);
     switch (returnCode) {
-        case 0 : {
+        case 0 :
             customAlert({
                 icon : 'success',
                 title: returnMsg
@@ -31,8 +31,10 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
                 if (callBackFn) callBackFn(returnData)
             })
             break;
-        }
-        case -1 : {
+        case 1 :
+            if (callBackFn) callBackFn(returnData)
+            break;
+        case -1 :
             customAlert({
                 icon : 'error',
                 title: returnMsg
@@ -40,7 +42,6 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
                 if (errorCallBackFn) errorCallBackFn()
             })
             break;
-        }
         default :
             break;
     }
@@ -57,11 +58,17 @@ export function defaultAxiosError(error) {
         case 403 :
             customAlert({
                 icon : 'error',
-                title: '세션이 종료 되었습니다.'
+                title: getMsg('sessionTimeOut')
             }).then(() => {
                 localStorage.removeItem('token');
                 window.location.replace("/");
             });
+            break;
+        case 500 :
+            customAlert({
+                icon : 'error',
+                title: getMsg('serverErrMsg')
+            })
             break;
         default :
             customAlert({

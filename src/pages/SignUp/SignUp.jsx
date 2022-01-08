@@ -17,9 +17,9 @@ const SignUp = () => {
     const [isPw, setIsPw] = useState(false);
 
     /**
-     *
-     * @param e
+     * ID 입력 시 이벤트
      * ID 입력 시 중복확인, 유효성 검사 진행
+     * @param e
      */
     const onIdHandler = (e) => {
         const idRegex = /^[a-zA-Z0-9]{4,12}$/
@@ -36,9 +36,9 @@ const SignUp = () => {
     }
 
     /**
-     *
+     * PW 입력 시 이벤트
+     * PW 입력 시 유효성 검사
      * @param e
-     * Pw 입력 시 유효성 검사
      */
     const onPwHandler = (e) => {
         const pwRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/
@@ -54,9 +54,8 @@ const SignUp = () => {
     }
 
     /**
-     *
-     * @param e
      * 회원가입 버튼 클릭 시 이벤트
+     * @param e
      */
     const onSubmitHandler = (e) => {
         e.preventDefault();
