@@ -40,6 +40,7 @@ const getStockDataCalc = (portData, apiData) => {
  */
 export const getStockArray = (portData, apiData) => {
     const stockArray = [];
+    const nonCurrentArray = getNonCurrentArray(portData);
     for (let i = 0; i < portData.length; i++) {
         for (let j = 0; j < apiData.length; j++) {
             if (portData[i].stockName === apiData[j].stockName) {
@@ -59,7 +60,7 @@ export const getStockArray = (portData, apiData) => {
             }
         }
     }
-    return stockArray;
+    return nonCurrentArray.concat(stockArray);
 }
 
 /**
@@ -67,7 +68,55 @@ export const getStockArray = (portData, apiData) => {
  * 사용하기 좋게 가공해서 리턴함.
  * (청약, 적금, 부동산 등의 자산)
  * @param portData
+ * @returns {*[]}
  */
 export const getNonCurrentArray = (portData) => {
+    const nonCurrentArray = [];
+    for (let i = 0; i < portData.length; i++) {
+        if (portData[i].stockType === 'nonCurrent') {
+            const stockData = getStockDataCalc(portData[i], Number(portData[i].stockPrice));
+            nonCurrentArray.push({
+                stockType        : portData[i].stockType,
+                stockInfo        : portData[i].stockInfo,
+                stockName        : portData[i].stockName,
+                stockPrice       : Number(portData[i].stockPrice),
+                stockAmount      : Number(portData[i].stockAmount),
+                currentPrice     : 0,
+                purchasePrice    : stockData.purchasePrice,
+                totalSum         : stockData.totalSum,
+                totalProfit      : stockData.totalProfit,
+                totalEarningsRate: stockData.totalEarningsRate,
+            })
+        }
+    }
+    return nonCurrentArray;
+}
 
+/**
+ * key 에 해당하는 value 값을 전부 더해서 리턴함.
+ * @param data array
+ * @param key string
+ * @returns {number}
+ */
+export const getSumValue = (data, key) => {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
+        sum += Number(data[i][key]);
+    }
+    return sum;
+}
+
+/**
+ * [{}, {]] 구조의 배열에서 Object 안에 있는
+ * key 의 value 값을 배열로 리턴함.
+ * @param data
+ * @param key
+ * @returns {*[]}
+ */
+export const getArrayKey = (data, key) => {
+    const newArray = [];
+    for (let i = 0; i < data.length; i++) {
+        newArray.push(data[i][key]);
+    }
+    return newArray
 }

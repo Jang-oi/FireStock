@@ -50,7 +50,7 @@ const Portfolios = () => {
                     <Button variant="success">모아보기</Button>
                 </div>
             </div>
-            <PortModal userInfo={userInfo} isModalShow={isModalShow} changeState={onChangeHandler}/>
+            <PortModal userInfo={userInfo} show={isModalShow} changeState={onChangeHandler}/>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import {Container, Nav, Navbar} from "react-bootstrap";
+import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {customAlert} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
@@ -32,7 +32,13 @@ const Menubar = () => {
      * @returns {JSX.Element}
      */
     const getMenuElement = () => {
-        return isToken ? <Nav><Link to="/my-page" className="nav-link">마이 페이지</Link><Nav.Link onClick={onLogOutHandler}>로그아웃</Nav.Link></Nav>
+        return isToken ? <Nav>
+                <NavDropdown title="마이 페이지" id="basic-nav-dropdown">
+                    <Link to="/my-page" className="dropdown-item">계정 관리</Link>
+                    <NavDropdown.Divider />
+                    <Link to="/trade-history" className="dropdown-item">거래 내역</Link>
+                </NavDropdown>
+                <Nav.Link onClick={onLogOutHandler}>로그아웃</Nav.Link></Nav>
                        : <Nav><Link to="/sign-in" className="nav-link">로그인</Link><Link to="/sign-up" className="nav-link">회원가입</Link></Nav>
     }
 

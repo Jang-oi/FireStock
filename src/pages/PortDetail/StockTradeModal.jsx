@@ -5,16 +5,16 @@ import {useSelector} from "react-redux";
 import {getMsg, makeUrlParameter} from "utils/stringUtil";
 import {axiosCall} from "utils/commonUtil";
 
-const StockTradeModal = ({stockTradeType, isModalShow, changeState}) => {
+const StockTradeModal = ({stockTradeType, show, changeState}) => {
     const portFolioName = useParams().id;
 
     const coinData = useSelector(store => store.coinData.coinData);
     const userInfo = useSelector(store => store.userInfo.userInfo);
 
     const defaultArray = [
-        {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentPrice: 0},
-        {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentPrice: 0},
-        {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentPrice: 0}
+        {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
+        {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
+        {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'}
     ]
 
     const [searchArray, setSearchArray] = useState(defaultArray);
@@ -51,7 +51,7 @@ const StockTradeModal = ({stockTradeType, isModalShow, changeState}) => {
         }
         const url = makeUrlParameter('/portfolio/input/stock', params);
         const stockTradeData = {
-            stockInfo  : selectStock.market,
+            stockInfo  : selectStock.stockInfo,
             stockName  : selectStock.stockName,
             stockType  : selectStock.stockType,
             stockPrice : averagePrice.replace(/,/g, ""),
@@ -86,7 +86,7 @@ const StockTradeModal = ({stockTradeType, isModalShow, changeState}) => {
      */
     const onListClickHandler = (e, value) => {
         setIsStockModal(false);
-        setSelectStock(value)
+        setSelectStock(value);
     }
 
     /**
@@ -216,7 +216,7 @@ const StockTradeModal = ({stockTradeType, isModalShow, changeState}) => {
     }
 
     return (
-        <Modal show={isModalShow} onHide={onHideHandler}>
+        <Modal show={show} onHide={onHideHandler} centered contentClassName="portDetail-tradeModal">
             <Modal.Header closeButton>
                 <Modal.Title>{getMsg(stockTradeType)}</Modal.Title>
             </Modal.Header>

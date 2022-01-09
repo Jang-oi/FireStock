@@ -6,6 +6,9 @@ import {Fragment, useEffect} from "react";
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import {useDispatch} from "react-redux";
+import {setCoinData} from "./modules/coinData";
+
 import Main from "./pages/Main/Main";
 import Menubar from "./components/Menubar";
 import SignIn from "./pages/SignIn/SignIn";
@@ -14,9 +17,8 @@ import Portfolios from "./pages/Portfolios/Portfolios";
 import NotFound from "./pages/NotFound/NotFound";
 import PrivateRoute from "./router/PrivateRoute";
 import PortDetail from "./pages/PortDetail/PortDetail";
-
-import {useDispatch} from "react-redux";
-import {setCoinData} from "./modules/coinData";
+import MyPage from "./pages/MyPage/MyPage";
+import TradeHistory from "./pages/TradeHistory/TradeHistory";
 
 const App = () => {
 
@@ -69,6 +71,8 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<PrivateRoute/>}>
                     <Route path="/" element={<Main/>}/>
+                    <Route path="/my-page" element={<MyPage/>}/>
+                    <Route path="/trade-history" element={<TradeHistory/>}/>
                     <Route path="/portfolios" element={<Portfolios/>}/>
                     <Route path="/portfolios/:id" element={<PortDetail/>}/>
                 </Route>

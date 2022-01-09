@@ -2,7 +2,7 @@ import {Modal, Button, Form, InputGroup, DropdownButton, Dropdown, FormControl, 
 import React, {useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 
-const PortModal = ({userInfo, isModalShow, changeState}) => {
+const PortModal = ({userInfo, show, changeState}) => {
 
     const [portName, setPortName] = useState('')
     const [account, setAccount] = useState('');
@@ -77,7 +77,7 @@ const PortModal = ({userInfo, isModalShow, changeState}) => {
         })
     }
     return (
-        <Modal show={isModalShow} onHide={onHideHandler}>
+        <Modal show={show} onHide={onHideHandler} centered>
             <Modal.Header closeButton>
                 <Modal.Title>포트폴리오 추가하기</Modal.Title>
             </Modal.Header>

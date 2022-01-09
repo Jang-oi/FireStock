@@ -9,6 +9,8 @@ import {getStockArray} from 'utils/arrayUtil';
 import {setPortDetailData} from "modules/portDetail";
 import {getMsg} from "utils/stringUtil";
 import StockTradeModal from "./StockTradeModal";
+import DetailAssetsCards from "./DetailAssetsCards";
+import {PieChart} from "components/Charts";
 
 const PortDetail = () => {
     const dispatch = useDispatch();
@@ -124,13 +126,13 @@ const PortDetail = () => {
     return (
         <div className="main-Container">
             <div className="inner-Container">
-                <StockTradeModal stockTradeType={stockTradeType} isModalShow={isModalShow} changeState={onChangeHandler}/>
+                <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
                 <div className="detail-Left-Container">
                     <div className="left-Assets-Container">
-                        {/*<DetailAssetsCards/>*/}
+                        <DetailAssetsCards/>
                     </div>
                     <div className="left-Chart-Container">
-                        {/*<PieChart detailData={getDetailData}/>*/}
+                        <PieChart detailData={detailData}/>
                     </div>
                 </div>
                 <div className="detail-Right-Container">

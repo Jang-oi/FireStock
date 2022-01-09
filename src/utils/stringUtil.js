@@ -47,7 +47,7 @@ export function getMsg(msgCode) {
     const message = {
         sessionTimeOut: '세션이 종료 되었습니다.',
         serverErrMsg  : '서버가 정상적이지 않습니다. 잠시 후 시도해주세요.',
-        all          : '전체',
+        all           : '전체',
         domestic      : '국내',
         overseas      : '해외',
         coin          : '코인',
