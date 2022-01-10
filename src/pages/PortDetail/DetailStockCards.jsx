@@ -1,7 +1,7 @@
 import {Card, Col, Row} from "react-bootstrap";
 
 const DetailStockCards = ({detailData}) => {
-    // TODO detailData 배열에서 type 이 noncurrent 일땐 다른 카드 형식으로 보이게.
+
     return (
         <Row md={1} className="g-4">
             {detailData.map((value, index) => (

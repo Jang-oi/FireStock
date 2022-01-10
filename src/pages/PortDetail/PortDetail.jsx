@@ -152,6 +152,7 @@ const PortDetail = () => {
                         })}
                         <Tab eventKey="stockEdit" title="종목 편집">
                             <div className="right-Stock-Container">
+
                             </div>
                         </Tab>
                         <Tab eventKey="moneyEdit" title="입출금">
