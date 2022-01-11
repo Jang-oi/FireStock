@@ -74,7 +74,7 @@ export const getNonCurrentArray = (portData) => {
     const nonCurrentArray = [];
     for (let i = 0; i < portData.length; i++) {
         if (portData[i].stockType === 'nonCurrent') {
-            const stockData = getStockDataCalc(portData[i], Number(portData[i].stockPrice));
+            const stockData = getStockDataCalc(portData[i], {currentPrice : Number(portData[i].stockPrice)});
             nonCurrentArray.push({
                 stockType        : portData[i].stockType,
                 stockInfo        : portData[i].stockInfo,

@@ -82,14 +82,12 @@ export function BarChart() {
 */
 
 export function PieChart({detailData}) {
-
     const data = {
         labels: getArrayKey(detailData, 'stockName'),
         datasets: [
             {
                 label: '# of Votes',
-                // TODO data 는 비율 계산하는 로직으로 ㄱㄱ
-                data: [40,10,20,30],
+                data: getArrayKey(detailData, 'totalSum'),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',

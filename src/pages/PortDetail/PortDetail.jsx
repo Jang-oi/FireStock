@@ -21,8 +21,8 @@ const PortDetail = () => {
     const userInfo = useSelector(store => store.userInfo.userInfo);
     const detailData = useSelector(store => store.portDetail.portDetailData);
 
-    const [type, setType] = useState('all');
-    const tabArray = ['all', 'domestic', 'overseas', 'coin', 'nonCurrent'];
+    const [type, setType] = useState('list');
+    const tabArray = ['list', 'domestic', 'overseas', 'coin', 'nonCurrent'];
 
     const [money, setMoney] = useState('');
     const [moneyType, setMoneyType] = useState('');
@@ -129,7 +129,7 @@ const PortDetail = () => {
                 <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
                 <div className="detail-Left-Container">
                     <div className="left-Assets-Container">
-                        <DetailAssetsCards/>
+                        <DetailAssetsCards detailData={detailData}/>
                     </div>
                     <div className="left-Chart-Container">
                         <PieChart detailData={detailData}/>

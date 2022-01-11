@@ -98,11 +98,11 @@ const PortModal = ({userInfo, show, changeState}) => {
                             align="end"
                             onSelect={onPortTypeHandler}
                         >
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='1'>일반 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='2'>ISA 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='3'>개인 연금 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='4'>IRP 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='6'>그 외(예적금, 부동산, 청약 등)</Dropdown.Item>
+                            <Dropdown.Item onClick={onAccountHandler} eventKey='일반 계좌'>일반 계좌</Dropdown.Item>
+                            <Dropdown.Item onClick={onAccountHandler} eventKey='ISA 계좌'>ISA 계좌</Dropdown.Item>
+                            <Dropdown.Item onClick={onAccountHandler} eventKey='개인 연금 계좌'>개인 연금 계좌</Dropdown.Item>
+                            <Dropdown.Item onClick={onAccountHandler} eventKey='IRP 계좌'>IRP 계좌</Dropdown.Item>
+                            <Dropdown.Item onClick={onAccountHandler} eventKey='그 외'>그 외(예적금, 부동산, 청약 등)</Dropdown.Item>
                         </DropdownButton>
                     </InputGroup>
                 </Form>
