@@ -1,4 +1,3 @@
-import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import 'styles/Sign.scss'
 import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
@@ -6,6 +5,17 @@ import {useDispatch} from "react-redux";
 import {setUserInfo} from "modules/userInfo";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
+import Copyright from 'components/Copyright';
+import {
+    Avatar,
+    Box,
+    Container,
+    CssBaseline,
+    Typography,
+    TextField,
+    Button, FormControlLabel, Checkbox, Grid
+} from "@mui/material";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const SignIn = () => {
 
@@ -20,7 +30,7 @@ const SignIn = () => {
 
     const [isSave, setIsSave] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['saveId']);
-    const cookieMaxAge = 2*60*60*1000;
+    const cookieMaxAge = 2 * 60 * 60 * 1000;
 
     /**
      * 쿠키에 아이디가 저장되어 있으면 입력 해주는 로직
@@ -91,25 +101,68 @@ const SignIn = () => {
     return (
         <div className="main-Container">
             <div className="inner-Container">
-                <Form className="form-Container">
-                    <FloatingLabel controlId="signInId" label="아이디를 입력해주세요." className="mb-3">
-                        <Form.Control type="text" placeholder="ID" value={id} onChange={onIdHandler}/>
-                    </FloatingLabel>
-                    <FloatingLabel controlId="signInPw" label="비밀번호를 입력해주세요." className="mb-3">
-                        <Form.Control type="password" placeholder="password" value={pw} onChange={onPwHandler}/>
-                    </FloatingLabel>
-                    <Row>
-                        <Col>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="아이디 저장하기" checked={isSave} onChange={onIdSaveHandler}/>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Button className="signIn-Form-Btn" variant="primary" type="submit" disabled={!(isId && isPw)}
-                            onClick={onSubmitHandler}>
-                        로그인
-                    </Button>
-                </Form>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline/>
+                    <Box
+                        sx={{
+                            marginTop    : 8,
+                            display      : 'flex',
+                            flexDirection: 'column',
+                            alignItems   : 'center',
+                        }}
+                    >
+                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                            <LockOutlinedIcon/>
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={onSubmitHandler}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        id="id"
+                                        label="ID"
+                                        name="id"
+                                        autoComplete="id"
+                                        onChange={onIdHandler}
+                                        value={id}
+                                        autoFocus
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        onChange={onPwHandler}
+                                        value={pw}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary"/>}
+                                label="아이디 저장하기" checked={isSave} onChange={onIdSaveHandler}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}
+                                disabled={!(isId && isPw)}
+                            >
+                                로그인
+                            </Button>
+                        </Box>
+                    </Box>
+                    <Copyright sx={{mt: 5}}/>
+                </Container>
             </div>
         </div>
     )

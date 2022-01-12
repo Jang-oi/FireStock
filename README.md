@@ -14,3 +14,6 @@
 * npm install redux-persist
 * npm install react-chartjs-2 chart.js
 * npm install styled-reset
+* npm install @mui/material
+  npm install @mui/icons-material
+* npm install @emotion/react @emotion/styled

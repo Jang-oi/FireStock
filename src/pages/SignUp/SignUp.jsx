@@ -1,20 +1,55 @@
 import {useNavigate} from "react-router-dom";
-import {Button, FloatingLabel, Form} from "react-bootstrap";
 import 'styles/Sign.scss'
 import {useState} from "react";
 import {axiosCall} from "utils/commonUtil";
+import Copyright from 'components/Copyright';
+import {
+    Avatar,
+    Box,
+    Container,
+    CssBaseline,
+    Grid,
+    Typography,
+    TextField,
+    Button
+} from "@mui/material";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const SignUp = () => {
     const navigate = useNavigate();
 
+    const [name, setName] = useState('');
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
 
+    const [nameMsg, setNameMsg] = useState('');
     const [idMsg, setIdMsg] = useState('');
     const [pwMsg, setPwMsg] = useState('');
 
+    const [isName, setIsName] = useState(false);
     const [isId, setIsId] = useState(false);
     const [isPw, setIsPw] = useState(false);
+
+
+    /**
+     * 이름 입력 시 이벤트
+     * 이름 입력 시 유효성 검사 진행
+     * @param e
+     */
+    const onNameHandler = (e) => {
+        const nameRegex = /^[ㄱ-ㅎ|ㅏ-ㅣ가-힣]{2,6}$/
+        const currentName = e.currentTarget.value;
+        setName(currentName);
+
+        if(!nameRegex.test(currentName)) {
+            setNameMsg('이름은 2~6글자의 한글로만 입력해주세요.');
+            setIsName(false);
+        } else {
+            setNameMsg('올바른 형식입니다. ');
+            setIsName(true);
+        }
+
+    }
 
     /**
      * ID 입력 시 이벤트
@@ -60,6 +95,7 @@ const SignUp = () => {
     const onSubmitHandler = (e) => {
         e.preventDefault();
         const signUpData = {
+            name    : name,
             _id     : id,
             password: pw
         }
@@ -71,20 +107,79 @@ const SignUp = () => {
     return (
         <div className="main-Container">
             <div className="inner-Container">
-                <Form className={"form-Container"}>
-                    <FloatingLabel controlId="signUpId" label="아이디를 입력해주세요." className="mb-3">
-                        <Form.Control type="text" placeholder="id" value={id} onChange={onIdHandler}/>
-                        <Form.Text className={`message ${isId ? 'true' : 'false'}`}>{idMsg}</Form.Text>
-                    </FloatingLabel>
-                    <FloatingLabel controlId="signUpPw" label="비밀번호를 입력해주세요." className="mb-3">
-                        <Form.Control type="password" placeholder="password" value={pw} onChange={onPwHandler}/>
-                        <Form.Text className={`message ${isPw ? 'true' : 'false'}`}>{pwMsg}</Form.Text>
-                    </FloatingLabel>
-                    <Button className="signUp-Form-Btn" variant="primary" type="submit" disabled={!(isId && isPw)}
-                            onClick={onSubmitHandler}>
-                        회원가입
-                    </Button>
-                </Form>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline/>
+                    <Box
+                        sx={{
+                            marginTop    : 8,
+                            display      : 'flex',
+                            flexDirection: 'column',
+                            alignItems   : 'center',
+                        }}
+                    >
+                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                            <LockOutlinedIcon/>
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign up
+                        </Typography>
+                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={onSubmitHandler}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        autoFocus
+                                        id="name"
+                                        label="Name"
+                                        name="name"
+                                        autoComplete="name"
+                                        onChange={onNameHandler}
+                                        value={name}
+                                        helperText={nameMsg}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        id="id"
+                                        label="ID"
+                                        name="id"
+                                        autoComplete="id"
+                                        onChange={onIdHandler}
+                                        value={id}
+                                        helperText={idMsg}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        id="password"
+                                        label="Password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        onChange={onPwHandler}
+                                        value={pw}
+                                        helperText={pwMsg}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}
+                                disabled={!(isId && isPw && isName)}
+                            >
+                                회원가입
+                            </Button>
+                        </Box>
+                    </Box>
+                    <Copyright sx={{mt: 5}}/>
+                </Container>
             </div>
         </div>
     )
