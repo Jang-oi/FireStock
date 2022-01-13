@@ -1,83 +1,116 @@
 import {useEffect, useState} from "react";
-import {axiosCall} from "../../utils/commonUtil";
+import {axiosCall} from "utils/commonUtil";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Table} from "react-bootstrap";
-import {setHistoryData} from "modules/history";
-import {getMsg} from "utils/stringUtil";
-import TradeHistoryModal from "./TradeHistoryModal";
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import {DataGrid} from '@mui/x-data-grid';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import {getHistoryData} from "utils/arrayUtil";
 
 const TradeHistory = () => {
 
     const dispatch = useDispatch();
     const userInfo = useSelector(store => store.userInfo.userInfo);
-    const history = useSelector(store => store.history.historyData);
 
-    const [isModalShow, setIsModalShow] = useState(false);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [history, setHistory] = useState([]);
+    const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
-        const params = {
-            userId   : userInfo._id,
-            startDate: startDate,
-            endDate  : endDate
-        }
-        console.log(params);
         axiosCall.get('history/find/data', {userId: userInfo._id}, function (returnData) {
-            // TODO 기간별 검색
-            dispatch(setHistoryData(returnData));
+            const historyData = getHistoryData(returnData);
+            setHistory(historyData);
         })
-    }, [dispatch, userInfo._id, isModalShow, startDate, endDate])
+    }, [dispatch, userInfo._id])
 
-
-    /**
-     * 기간별 검색하기 버튼 클릭 시 이벤트
-     */
-    const onDateSearchHandler = () => {
-        setIsModalShow(true);
+    function escapeRegExp(value) {
+        return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     }
 
-    /**
-     * Modal 창이 닫힐 때 이벤트
-     */
-    const onChangeHandler = (startDate, endDate) => {
-        setStartDate(startDate);
-        setEndDate(endDate);
-        setIsModalShow(false);
+    function QuickSearchToolbar() {
+        return (
+            <Box sx={{
+                p             : 0.5,
+                pb            : 0,
+                justifyContent: 'flex-end',
+                display       : 'flex',
+            }}>
+                <TextField
+                    variant="standard"
+                    value={searchText}
+                    onChange={requestSearch}
+                    placeholder="Search…"
+                    InputProps={{
+                        startAdornment: <SearchIcon fontSize="small"/>,
+                        endAdornment  : (
+                            <IconButton
+                                title="Clear"
+                                aria-label="Clear"
+                                size="small"
+                                style={{visibility: searchText ? 'visible' : 'hidden'}}
+                            >
+                                <ClearIcon fontSize="small"/>
+                            </IconButton>
+                        ),
+                    }}
+                />
+            </Box>
+        );
     }
+
+    const requestSearch = (e) => {
+        const currentSearchValue = e.currentTarget.value;
+        setSearchText(currentSearchValue);
+        /*        const searchRegex = new RegExp(escapeRegExp(currentSearchValue), 'i');
+                const filteredRows = history.filter((row) => {
+                    return Object.keys(row).some((field) => {
+                        return searchRegex.test(row[field].toString());
+                    });
+                });
+                setHistory(filteredRows);*/
+    };
+
+    const historyColumns = [
+        {
+            field     : "regdt",
+            headerName: "체결 시간",
+            type      : 'date',
+            width     : 180
+        },
+        {
+            field     : "stockName",
+            headerName: "종목명",
+            width     : 180
+        },
+        {
+            field     : "type",
+            headerName: "종류",
+            width     : 180
+        },
+        {
+            field     : "stockAmount",
+            headerName: "거래 수량",
+            type      : 'number',
+            width     : 180
+        },
+        {
+            field     : "stockPrice",
+            headerName: "거래 금액",
+            type      : 'number',
+            width     : 180,
+        },
+    ]
 
     return (
         <div className="main-Container">
-            <div className="inner-Container">
-                <TradeHistoryModal show={isModalShow} changeState={onChangeHandler}/>
-                <Button variant="primary" onClick={onDateSearchHandler}>기간별 검색하기</Button>
-                <Table responsive>
-                    <thead>
-                    <tr>
-                        <th>체결 시간</th>
-                        <th>종목명</th>
-                        <th>종류</th>
-                        <th>거래수량</th>
-                        <th>거래단가</th>
-                        <th>거래금액</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {history.map((value, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{value.regdt}</td>
-                                <td>{value.portFolioData.stockName}</td>
-                                <td>{getMsg(value.type)}</td>
-                                <td>{value.portFolioData.stockAmount}</td>
-                                <td>{value.portFolioData.stockPrice}</td>
-                                <td>{value.portFolioData.stockAmount * value.portFolioData.stockPrice}</td>
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </Table>
-            </div>
+            <Box sx={{height: 800, width : '100%'}}>
+                <DataGrid
+                    components={{Toolbar: QuickSearchToolbar}}
+                    rows={history}
+                    columns={historyColumns}
+                />
+            </Box>
         </div>
     )
 }

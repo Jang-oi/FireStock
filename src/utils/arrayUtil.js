@@ -4,6 +4,8 @@
  * @param apiData
  * @returns {{totalSum: number, totalProfit: number, purchasePrice: number, totalEarningsRate: string}}
  */
+import {getMsg} from "./stringUtil";
+
 const getStockDataCalc = (portData, apiData) => {
     const purchasePrice = Number(portData.stockPrice) * Number(portData.stockAmount);
     const totalSum = Number(apiData.currentPrice) * Number(portData.stockAmount);
@@ -74,7 +76,7 @@ export const getNonCurrentArray = (portData) => {
     const nonCurrentArray = [];
     for (let i = 0; i < portData.length; i++) {
         if (portData[i].stockType === 'nonCurrent') {
-            const stockData = getStockDataCalc(portData[i], {currentPrice : Number(portData[i].stockPrice)});
+            const stockData = getStockDataCalc(portData[i], {currentPrice: Number(portData[i].stockPrice)});
             nonCurrentArray.push({
                 stockType        : portData[i].stockType,
                 stockInfo        : portData[i].stockInfo,
@@ -119,4 +121,24 @@ export const getArrayKey = (data, key) => {
         newArray.push(data[i][key]);
     }
     return newArray
+}
+
+/**
+ * Grid 에 Column 에 맞춰 데이터 세팅된 배열로 리턴함.
+ * @param historyData
+ * @returns {*[]}
+ */
+export const getHistoryData = (historyData) => {
+    const newArray = [];
+    for (let i = 0; i < historyData.length; i++) {
+        newArray.push({
+            id         : i,
+            regdt      : historyData[i].regdt,
+            stockName  : historyData[i].portFolioData.stockName,
+            type       : getMsg(historyData[i].type),
+            stockAmount: historyData[i].portFolioData.stockAmount,
+            stockPrice : historyData[i].portFolioData.stockAmount * historyData[i].portFolioData.stockPrice,
+        })
+    }
+    return newArray;
 }

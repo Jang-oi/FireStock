@@ -1,8 +1,9 @@
-import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {customAlert} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {initUserInfo} from "modules/userInfo";
+import {Button, Menu, MenuItem, Toolbar, Typography} from "@mui/material";
+import {Fragment, useState} from "react";
 
 const Menubar = () => {
 
@@ -11,7 +12,30 @@ const Menubar = () => {
 
     const isToken = localStorage.getItem('token')
 
+    const [menuItem, setMenuItem] = useState(null);
+    const open = Boolean(menuItem);
+
+    /**
+     * 메뉴 클릭 시 이벤트
+     * @param e
+     */
+    const onMenuClickHandler = (e) => {
+        setMenuItem(e.currentTarget);
+    };
+
+    /**
+     * 메뉴가 닫혀야 하는 경우의 로직
+     */
+    const onMenuCloseHandler = () => {
+        setMenuItem(null);
+    };
+
+
+    /**
+     * 로그아웃 클릭 시 이벤트
+     */
     const onLogOutHandler = () => {
+        onMenuCloseHandler();
         customAlert({
             icon             : 'warning',
             title            : '로그아웃 하시겠습니까?',
@@ -32,29 +56,56 @@ const Menubar = () => {
      * @returns {JSX.Element}
      */
     const getMenuElement = () => {
-        return isToken ? <Nav>
-                <NavDropdown title="마이 페이지" id="basic-nav-dropdown">
-                    <Link to="/my-page" className="dropdown-item">계정 관리</Link>
-                    <NavDropdown.Divider />
-                    <Link to="/trade-history" className="dropdown-item">거래 내역</Link>
-                </NavDropdown>
-                <Nav.Link onClick={onLogOutHandler}>로그아웃</Nav.Link></Nav>
-                       : <Nav><Link to="/sign-in" className="nav-link">로그인</Link><Link to="/sign-up" className="nav-link">회원가입</Link></Nav>
-    }
+        return isToken ?
+            <Fragment>
+                <Button>PORTFOLIOS</Button>
+                <Button id="fade-button" onClick={onMenuClickHandler}>MY PAGE</Button>
+                <Menu
+                    id="fade-menu"
+                    anchorEl={menuItem}
+                    open={open}
+                    onClose={onMenuCloseHandler}
+                >
+                    <MenuItem onClick={() => {
+                        navigate('/my-page')
+                        onMenuCloseHandler();
+                    }}>Account</MenuItem>
+                    <MenuItem onClick={() => {
+                        navigate('/trade-history')
+                        onMenuCloseHandler();
+                    }}>History</MenuItem>
+                    <MenuItem onClick={onLogOutHandler}>Logout</MenuItem>
+                </Menu>
+            </Fragment>
+            :
+            <Fragment>
+                <Button onClick={() => {
+                    navigate('/sign-in')
+                    onMenuCloseHandler();
+                }}>SIGN-IN</Button>
+                <Button onClick={() => {
+                    navigate('/sign-up')
+                    onMenuCloseHandler();
+                }}>SIGN-UP</Button>
+            </Fragment>
 
+    }
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Container>
-                <Link to="/" className="navbar-brand">Fire-Stock</Link>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto">
-                        <Link to="/portfolios" className="nav-link">포트폴리오</Link>
-                    </Nav>
-                    {getMenuElement()}
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+        <div className="main-Container">
+            <Toolbar sx={{borderBottom: 1, borderColor: 'divider'}}>
+                <Button>Fire Stock</Button>
+                <Typography
+                    component="h2"
+                    variant="h5"
+                    color="inherit"
+                    align="center"
+                    noWrap
+                    sx={{flex: 1}}
+                >
+                </Typography>
+                {getMenuElement()}
+            </Toolbar>
+        </div>
     )
 }
 export default Menubar

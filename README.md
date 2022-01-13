@@ -17,3 +17,6 @@
 * npm install @mui/material
   npm install @mui/icons-material
 * npm install @emotion/react @emotion/styled
+* npm install @mui/x-data-grid
+* npm install @mui/x-data-grid-generator
+* npm install @mui/styles

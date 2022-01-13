@@ -41,7 +41,7 @@ const SignUp = () => {
         const currentName = e.currentTarget.value;
         setName(currentName);
 
-        if(!nameRegex.test(currentName)) {
+        if (!nameRegex.test(currentName)) {
             setNameMsg('이름은 2~6글자의 한글로만 입력해주세요.');
             setIsName(false);
         } else {
@@ -106,81 +106,79 @@ const SignUp = () => {
 
     return (
         <div className="main-Container">
-            <div className="inner-Container">
-                <Container component="main" maxWidth="xs">
-                    <CssBaseline/>
-                    <Box
-                        sx={{
-                            marginTop    : 8,
-                            display      : 'flex',
-                            flexDirection: 'column',
-                            alignItems   : 'center',
-                        }}
-                    >
-                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                            <LockOutlinedIcon/>
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign up
-                        </Typography>
-                        <Box component="form" noValidate sx={{mt: 3}} onSubmit={onSubmitHandler}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="standard"
-                                        fullWidth
-                                        autoFocus
-                                        id="name"
-                                        label="Name"
-                                        name="name"
-                                        autoComplete="name"
-                                        onChange={onNameHandler}
-                                        value={name}
-                                        helperText={nameMsg}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="standard"
-                                        fullWidth
-                                        id="id"
-                                        label="ID"
-                                        name="id"
-                                        autoComplete="id"
-                                        onChange={onIdHandler}
-                                        value={id}
-                                        helperText={idMsg}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="standard"
-                                        fullWidth
-                                        id="password"
-                                        label="Password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete="new-password"
-                                        onChange={onPwHandler}
-                                        value={pw}
-                                        helperText={pwMsg}
-                                    />
-                                </Grid>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline/>
+                <Box
+                    sx={{
+                        marginTop    : 8,
+                        display      : 'flex',
+                        flexDirection: 'column',
+                        alignItems   : 'center',
+                    }}
+                >
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
+                    </Typography>
+                    <Box component="form" noValidate sx={{mt: 3}} onSubmit={onSubmitHandler}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="standard"
+                                    fullWidth
+                                    autoFocus
+                                    id="name"
+                                    label="Name"
+                                    name="name"
+                                    autoComplete="name"
+                                    onChange={onNameHandler}
+                                    value={name}
+                                    helperText={nameMsg}
+                                />
                             </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{mt: 3, mb: 2}}
-                                disabled={!(isId && isPw && isName)}
-                            >
-                                회원가입
-                            </Button>
-                        </Box>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="standard"
+                                    fullWidth
+                                    id="id"
+                                    label="ID"
+                                    name="id"
+                                    autoComplete="id"
+                                    onChange={onIdHandler}
+                                    value={id}
+                                    helperText={idMsg}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="standard"
+                                    fullWidth
+                                    id="password"
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    onChange={onPwHandler}
+                                    value={pw}
+                                    helperText={pwMsg}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{mt: 3, mb: 2}}
+                            disabled={!(isId && isPw && isName)}
+                        >
+                            회원가입
+                        </Button>
                     </Box>
-                    <Copyright sx={{mt: 5}}/>
-                </Container>
-            </div>
+                </Box>
+                <Copyright sx={{mt: 5}}/>
+            </Container>
         </div>
     )
 }
