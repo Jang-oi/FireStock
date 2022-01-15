@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {customAlert} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {initUserInfo} from "modules/userInfo";
-import {Button, Menu, MenuItem, Toolbar, Typography} from "@mui/material";
+import {Button, Container, Menu, MenuItem, Toolbar, Typography} from "@mui/material";
 import {Fragment, useState} from "react";
 
 const Menubar = () => {
@@ -58,7 +58,7 @@ const Menubar = () => {
     const getMenuElement = () => {
         return isToken ?
             <Fragment>
-                <Button>PORTFOLIOS</Button>
+                <Button onClick={() => navigate('/portfolios')}>PORTFOLIOS</Button>
                 <Button id="fade-button" onClick={onMenuClickHandler}>MY PAGE</Button>
                 <Menu
                     id="fade-menu"
@@ -91,9 +91,9 @@ const Menubar = () => {
 
     }
     return (
-        <div className="main-Container">
+        <Container>
             <Toolbar sx={{borderBottom: 1, borderColor: 'divider'}}>
-                <Button>Fire Stock</Button>
+                <Button onClick={() => navigate('/')}>Fire Stock</Button>
                 <Typography
                     component="h2"
                     variant="h5"
@@ -105,7 +105,7 @@ const Menubar = () => {
                 </Typography>
                 {getMenuElement()}
             </Toolbar>
-        </div>
+        </Container>
     )
 }
 export default Menubar

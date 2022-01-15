@@ -6,6 +6,7 @@ import {axiosCall} from "utils/commonUtil";
 import {setPortFolioData} from "modules/portFolios";
 import PortCards from "./PortCards";
 import PortModal from "./PortModal";
+import {Container} from "@mui/material";
 
 const Portfolios = () => {
 
@@ -41,17 +42,24 @@ const Portfolios = () => {
     }
 
 
+/*    <Stack
+        sx={{ pt: 4 }}
+        direction="row"
+        spacing={2}
+        justifyContent="center"
+    >
+        <Button variant="contained">Main call to action</Button>
+        <Button variant="outlined">Secondary action</Button>
+    </Stack>*/
     return (
-        <div className="main-Container">
-            <div className="inner-Container">
+        <Container>
                 <PortCards portFolios={portFolios} userInfo={userInfo}/>
                 <div className="btn-Container">
                     <Button variant="primary" onClick={onPortAddHandler}>추가하기</Button>
                     <Button variant="success">모아보기</Button>
                 </div>
-            </div>
             <PortModal userInfo={userInfo} show={isModalShow} changeState={onChangeHandler}/>
-        </div>
+        </Container>
     )
 }
 
