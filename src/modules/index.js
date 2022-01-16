@@ -6,13 +6,12 @@ import userInfo from "./userInfo";
 import portFolios from "./portFolios";
 import coinData from "./coinData";
 import portDetail from "./portDetail";
-import history from "./history";
 
 const persistConfig = {
     key : 'root',
     storage,
     // 특정 리듀서 로컬스토리지에 저장
-    whitelist: ['userInfo', 'portFolios', 'history']
+    whitelist: ['userInfo', 'portFolios']
 }
 
 const rootReducer = combineReducers({
@@ -20,7 +19,6 @@ const rootReducer = combineReducers({
     portFolios,
     coinData,
     portDetail,
-    history
 })
 
 export default persistReducer(persistConfig, rootReducer);

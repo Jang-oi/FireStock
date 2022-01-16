@@ -1,6 +1,14 @@
-import {Modal, Button, Form, InputGroup, DropdownButton, Dropdown, FormControl, FloatingLabel} from "react-bootstrap";
 import React, {useState} from "react";
 import {axiosCall} from "utils/commonUtil";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+    Button,
+    Select, MenuItem, InputLabel, FormControl
+} from "@mui/material";
 
 const PortModal = ({userInfo, show, changeState}) => {
 
@@ -27,19 +35,11 @@ const PortModal = ({userInfo, show, changeState}) => {
      * @param e
      */
     const onAccountHandler = (e) => {
-        const currentAccount = e.target.innerHTML;
+        const currentAccount = e.target.value;
+        setPortType(currentAccount);
         setAccount(currentAccount);
         if (currentAccount === '') setIsAccountChk(false);
         else setIsAccountChk(true);
-    }
-    /**
-     * 계좌 선택시 이벤트
-     * 포트 타입을 지정해서 서버에 넘기는 용도
-     * Dropdown.Item 에서 eventKey 값 가져옴
-     * @param e
-     */
-    const onPortTypeHandler = (e) => {
-        setPortType(e);
     }
     /**
      * 포트폴리오 이름 입력 시 이벤트
@@ -77,45 +77,34 @@ const PortModal = ({userInfo, show, changeState}) => {
         })
     }
     return (
-        <Modal show={show} onHide={onHideHandler} centered>
-            <Modal.Header closeButton>
-                <Modal.Title>포트폴리오 추가하기</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                    <Form.Group className="mb-3" controlId="portName">
-                        <FloatingLabel controlId="signInId" label="포트폴리오 이름을 입력해주세요." className="mb-3">
-                            <Form.Control type="text" placeholder="ID" value={portName} onChange={onPortNameHandler}/>
-                        </FloatingLabel>
-                    </Form.Group>
-                    <InputGroup className="mb-3">
-                        <FormControl aria-label="Text input with dropdown button" placeholder={account}
-                                     disabled={true}/>
-                        <DropdownButton
-                            variant="outline-secondary"
-                            title="계좌 선택"
-                            id="input-group-dropdown-2"
-                            align="end"
-                            onSelect={onPortTypeHandler}
-                        >
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='일반 계좌'>일반 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='ISA 계좌'>ISA 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='개인 연금 계좌'>개인 연금 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='IRP 계좌'>IRP 계좌</Dropdown.Item>
-                            <Dropdown.Item onClick={onAccountHandler} eventKey='그 외'>그 외(예적금, 부동산, 청약 등)</Dropdown.Item>
-                        </DropdownButton>
-                    </InputGroup>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={onAddPortHandler} disabled={!(isPortName && isAccountChk)}>
-                    추가
-                </Button>
-                <Button variant="primary" onClick={onHideHandler}>
-                    취소
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        <Dialog open={show} onClose={onHideHandler} fullWidth sx={{zIndex:150}}>
+            <DialogTitle>포트폴리오 추가하기</DialogTitle>
+            <DialogContent>
+                <TextField autoFocus label="포트폴리오 이름을 입력해주세요." type="text" fullWidth variant="standard"
+                           value={portName}
+                           onChange={onPortNameHandler}
+                           sx={{mb: 3}}
+                />
+                <FormControl variant="standard" fullWidth>
+                    <InputLabel id="demo-simple-select-standard-label">계좌 선택</InputLabel>
+                    <Select
+                        fullWidth
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        value={account}
+                        onChange={onAccountHandler}
+                        label="계좌 선택"
+                    >
+                        <MenuItem value={'일반'}>일반 계좌</MenuItem>
+                        <MenuItem value={'기타'}>그 외(예적금, 부동산, 청약 등)</MenuItem>
+                    </Select>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onAddPortHandler} disabled={!(isPortName && isAccountChk)}>추가</Button>
+                <Button onClick={onHideHandler}>취소</Button>
+            </DialogActions>
+        </Dialog>
     )
 }
 

@@ -1,12 +1,12 @@
 import 'styles/Portfolios.scss'
-import {Button} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {setPortFolioData} from "modules/portFolios";
 import PortCards from "./PortCards";
 import PortModal from "./PortModal";
-import {Container} from "@mui/material";
+import {Container, Fab, Box} from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 const Portfolios = () => {
 
@@ -22,7 +22,7 @@ const Portfolios = () => {
      * 접속한 아이디에 해당하는 포트폴리오를 세팅함.
      */
     useEffect(() => {
-        axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function(returnData) {
+        axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function (returnData) {
             dispatch(setPortFolioData(returnData.portFolioDetailMap));
         })
     }, [dispatch, userInfo._id, isModalShow])
@@ -41,23 +41,12 @@ const Portfolios = () => {
         setIsModalShow(true);
     }
 
-
-/*    <Stack
-        sx={{ pt: 4 }}
-        direction="row"
-        spacing={2}
-        justifyContent="center"
-    >
-        <Button variant="contained">Main call to action</Button>
-        <Button variant="outlined">Secondary action</Button>
-    </Stack>*/
     return (
         <Container>
-                <PortCards portFolios={portFolios} userInfo={userInfo}/>
-                <div className="btn-Container">
-                    <Button variant="primary" onClick={onPortAddHandler}>추가하기</Button>
-                    <Button variant="success">모아보기</Button>
-                </div>
+            <PortCards portFolios={portFolios} userInfo={userInfo}/>
+            <Box sx={{mt:3, mx:3, float: 'right'}}>
+                <Fab color="primary" aria-label="add" onClick={onPortAddHandler}><AddIcon/></Fab>
+            </Box>
             <PortModal userInfo={userInfo} show={isModalShow} changeState={onChangeHandler}/>
         </Container>
     )

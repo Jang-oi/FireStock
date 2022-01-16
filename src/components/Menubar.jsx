@@ -44,9 +44,9 @@ const Menubar = () => {
             cancelButtonText : '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                localStorage.removeItem('token')
-                dispatch(initUserInfo());
+                localStorage.removeItem('token');
                 navigate('/sign-in');
+                dispatch(initUserInfo());
             }
         })
     }
