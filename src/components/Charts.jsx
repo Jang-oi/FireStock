@@ -1,153 +1,85 @@
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-import {Doughnut} from 'react-chartjs-2';
-import {getArrayKey} from "../utils/arrayUtil";
+import React, {useState} from 'react';
+import {PieChart, Pie, Sector, Cell} from 'recharts';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend
-);
+export const CustomPieChart = ({detailData}) => {
+    const data = [
+        {name: 'Group A', value: 400},
+        {name: 'Group B', value: 300},
+        {name: 'Group C', value: 300},
+        {name: 'Group D', value: 200},
+    ];
+    const colors = ['red','yellow','blue']
+    const renderActiveShape = (props) => {
+        const RADIAN = Math.PI / 180;
+        const {cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, totalSum} = props;
+        const sin = Math.sin(-RADIAN * midAngle);
+        const cos = Math.cos(-RADIAN * midAngle);
+        const sx = cx + (outerRadius + 10) * cos;
+        const sy = cy + (outerRadius + 10) * sin;
+        const mx = cx + (outerRadius + 30) * cos;
+        const my = cy + (outerRadius + 30) * sin;
+        const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+        const ey = my;
+        const textAnchor = cos >= 0 ? 'start' : 'end';
 
-/*
-export function BarChart() {
-
-    const options = {
-        plugins: {
-            title: {
-                display: true,
-                text: '주식 시장 비교',
-            },
-        },
-        responsive: true,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        scales: {
-            x: {
-                stacked: true,
-            },
-            y: {
-                stacked: true,
-            },
-        },
+        return (
+            <g>
+                <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+                    {payload.name}
+                </text>
+                <Sector
+                    cx={cx}
+                    cy={cy}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius}
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    fill={fill}
+                />
+                <Sector
+                    cx={cx}
+                    cy={cy}
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    innerRadius={outerRadius + 6}
+                    outerRadius={outerRadius + 10}
+                    fill={fill}
+                />
+                <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none"/>
+                <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none"/>
+                <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`PV ${totalSum}`}</text>
+                <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+                    {`(Rate ${(percent * 100).toFixed(2)}%)`}
+                </text>
+            </g>
+        );
     };
 
-    const labels = [faker.date.month(),faker.date.month(),faker.date.month()]
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: faker.lorem.sentence(),
-                data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-                backgroundColor: 'rgb(255, 99, 132)',
-                stack: 'Stack 0',
-            },
-            {
-                label: faker.lorem.sentence(),
-                data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-                backgroundColor: 'rgb(75, 192, 192)',
-                stack: 'Stack 0',
-            },
-            {
-                label: faker.lorem.sentence(),
-                data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-                backgroundColor: 'rgb(53, 162, 235)',
-                stack: 'Stack 1',
-            },
-        ],
+    const [activeIndex, setActiveIndex] = useState('');
+    const onPieEnter = (data, index) => {
+        setActiveIndex(index);
     };
 
     return (
-        <Bar options={options} data={data} />
+        <PieChart width={400} height={400}>
+            <Pie
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape}
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                onMouseEnter={onPieEnter}
+            >
+                {
+                    data.map((entry, index) =>
+                        <Cell key={`cell-${index}`} fill={colors[index]}/>
+                    )
+                }
+            </Pie>
+        </PieChart>
     )
 }
-*/
-
-export function PieChart({detailData}) {
-    const data = {
-        labels: getArrayKey(detailData, 'stockName'),
-        datasets: [
-            {
-                label: '# of Votes',
-                data: getArrayKey(detailData, 'totalSum'),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    return (
-        <Doughnut data={data}  type={"doughnut"}/>
-    )
-}
-
-/*
-export function LineChart() {
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart',
-            },
-        },
-    };
-    const labels = [faker.date.month(),faker.date.month(),faker.date.month()]
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Dataset 2',
-                data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ],
-    };
-
-    return (
-        <Line options={options} data={data} />
-    )
-}*/

@@ -44,7 +44,7 @@ const Portfolios = () => {
     return (
         <Container>
             <PortCards portFolios={portFolios} userInfo={userInfo}/>
-            <Box sx={{mt:3, mx:3, float: 'right'}}>
+            <Box sx={{mt:3, mx:3, textAlign: 'center'}}>
                 <Fab color="primary" aria-label="add" onClick={onPortAddHandler}><AddIcon/></Fab>
             </Box>
             <PortModal userInfo={userInfo} show={isModalShow} changeState={onChangeHandler}/>
