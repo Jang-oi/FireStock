@@ -10,7 +10,7 @@ import {setPortDetailData} from "modules/portDetail";
 import {getMsg} from "utils/stringUtil";
 import StockTradeModal from "./StockTradeModal";
 import DetailAssetsCards from "./DetailAssetsCards";
-import {CustomPieChart} from "components/Charts";
+import {PieChart} from "components/Charts";
 import {Box, Container, Button} from "@mui/material";
 
 const PortDetail = () => {
@@ -46,7 +46,7 @@ const PortDetail = () => {
         }, function () {
             navigate('/404');
         })
-    }, [coinData, dispatch, type, portFolioName, userInfo._id, navigate])
+    }, [coinData, dispatch, type, portFolioName, userInfo._id, navigate, isModalShow])
 
     const [stockTradeType, setStockTradeType] = useState('');
 
@@ -128,8 +128,8 @@ const PortDetail = () => {
         <Container>
             <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
             <Box sx={{width:'50%', float:'left'}}>
-                <DetailAssetsCards/>
-                <CustomPieChart detailData={detailData}/>
+                <DetailAssetsCards show={isModalShow}/>
+                <PieChart detailData={detailData}/>
             </Box>
             <Box sx={{width:'50%', float:'right'}}>
                 <Button variant="outlined" size="medium" onClick={onStockBuyHandler}>종목 매수</Button>

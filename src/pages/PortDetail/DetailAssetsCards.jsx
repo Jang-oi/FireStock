@@ -10,7 +10,7 @@ import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {getStockArray, getSumValue} from "utils/arrayUtil";
 
-const DetailAssetsCards = () => {
+const DetailAssetsCards = ({show}) => {
     const portFolioName = useParams().id;
     const navigate = useNavigate();
 
@@ -31,23 +31,24 @@ const DetailAssetsCards = () => {
         }, function () {
             navigate('/404');
         })
-    }, [coinData, navigate, portFolioName, userInfo._id])
+    }, [coinData, navigate, portFolioName, userInfo._id, show])
 
-    const purchasePrice = getSumValue(stockArray, 'purchasePrice');
-    const totalSum = getSumValue(stockArray, 'totalSum');
-    const totalProfit = getSumValue(stockArray, 'totalProfit');
+    const purchasePrice = getSumValue(stockArray, 'purchasePrice')
+    const totalSum = getSumValue(stockArray, 'totalSum')
+    const totalProfit = getSumValue(stockArray, 'totalProfit')
     const totalEarningsRate = (!(totalProfit / purchasePrice) ? 0 : (totalProfit / purchasePrice)).toLocaleString('ko-KR', {style: "percent", minimumFractionDigits : 2});
-    const portMoney = (portData.portFolioWonMoney + portData.portFolioDollarMoney).toLocaleString('ko-KR');
+    const portMoney = Number(portData.portFolioWonMoney + portData.portFolioDollarMoney);
+    const portTotalMoney = Number(portMoney + totalSum);
 
     return (
         <Card>
             <CardContent>
                 <CardHeader title={useParams().id}/>
                 <Typography component="p" variant="body1">
-                    총 보유 자산 : <br/>
+                    총 보유 자산 : {portTotalMoney.toLocaleString('ko-KR')}원<br/>
                     총 매수 금액 : {purchasePrice.toLocaleString('ko-KR')}원 <br/>
                     총 평가 금액 : {totalSum.toLocaleString('ko-KR')}원 <br/>
-                    예수금 : {portMoney}원
+                    예수금 : {portMoney.toLocaleString('ko-KR')}원
                 </Typography>
                 <Typography sx={{mt:3}} component="p" variant="body1">
                     총 평가 손익 : {totalProfit.toLocaleString('ko-KR')}원 <br/>

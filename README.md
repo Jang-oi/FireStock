@@ -12,7 +12,6 @@
 * npm install react-cookie
 * npm install redux react-redux redux-logger
 * npm install redux-persist
-* npm install react-chartjs-2 chart.js
 * npm install styled-reset
 * npm install @mui/material
   npm install @mui/icons-material
@@ -20,4 +19,4 @@
 * npm install @mui/x-data-grid
 * npm install @mui/x-data-grid-generator
 * npm install @mui/styles
-* npm install recharts
+* npm install react-apexcharts apexcharts
