@@ -83,6 +83,11 @@ const TradeHistory = () => {
             width     : 200
         },
         {
+            field     : "portFolioName",
+            headerName: "포트폴리오명",
+            width     : 200
+        },
+        {
             field     : "stockName",
             headerName: "종목명",
             width     : 200
@@ -90,13 +95,13 @@ const TradeHistory = () => {
         {
             field     : "type",
             headerName: "종류",
-            width     : 200
+            width     : 150
         },
         {
             field     : "stockAmount",
             headerName: "거래 수량",
             type      : 'number',
-            width     : 200
+            width     : 150
         },
         {
             field     : "stockPrice",

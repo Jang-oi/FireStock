@@ -1,8 +1,6 @@
-import 'styles/PortDetail.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {FloatingLabel, Form, Tab, Tabs} from "react-bootstrap";
 import DetailStockCards from "./DetailStockCards";
 import {axiosCall} from "utils/commonUtil";
 import {getStockArray} from 'utils/arrayUtil';
@@ -11,7 +9,19 @@ import {getMsg} from "utils/stringUtil";
 import StockTradeModal from "./StockTradeModal";
 import DetailAssetsCards from "./DetailAssetsCards";
 import {PieChart} from "components/Charts";
-import {Box, Container, Button} from "@mui/material";
+import {
+    Box,
+    Container,
+    Button,
+    Tab,
+    Tabs,
+    TextField,
+    InputAdornment,
+    FormControl,
+    FormLabel,
+    RadioGroup, FormControlLabel, Radio
+} from "@mui/material";
+import {TabContext, TabPanel} from "@mui/lab";
 
 const PortDetail = () => {
     const dispatch = useDispatch();
@@ -23,13 +33,14 @@ const PortDetail = () => {
     const detailData = useSelector(store => store.portDetail.portDetailData);
 
     const [type, setType] = useState('list');
-    const tabArray = ['list', 'domestic', 'overseas', 'coin', 'nonCurrent'];
+    const tabArray = ['list', 'coin', 'nonCurrent'];
 
     const [money, setMoney] = useState('');
-    const [moneyType, setMoneyType] = useState('');
+    const [moneyType, setMoneyType] = useState('won');
 
     const [isMoney, setIsMoney] = useState(false);
-    const [isMoneyType, setIsMoneyType] = useState(false);
+    const [isMoneyType, setIsMoneyType] = useState(true);
+    const [isMoneySubmit, setIsMoneySubmit] = useState(false);
 
     const [isModalShow, setIsModalShow] = useState(false);
 
@@ -70,9 +81,10 @@ const PortDetail = () => {
     /**
      * 메뉴 탭 클릭 시 이벤트
      * @param e
+     * @param newValue
      */
-    const onTabSelectHandler = (e) => {
-        setType(e);
+    const onTabSelectHandler = (e, newValue) => {
+        setType(newValue);
     }
 
     /**
@@ -82,8 +94,8 @@ const PortDetail = () => {
      */
     const onMoneyHandler = (e) => {
         let currentMoney = e.currentTarget.value;
-        currentMoney = currentMoney.replace(/[^0-9]/g, '');
-        setMoney(Number(currentMoney).toLocaleString('ko-KR'));
+        currentMoney = currentMoney.replace(/(\.\d{2})\d+/g, '$1');
+        setMoney(currentMoney);
         if (currentMoney === '') setIsMoney(false);
         else setIsMoney(true);
     }
@@ -94,6 +106,7 @@ const PortDetail = () => {
      */
     const onMoneyEditHandler = (e) => {
         const currentMethod = e.target.id;
+        setIsMoneySubmit(false);
         const params = {
             userId       : userInfo._id,
             method       : currentMethod,
@@ -102,8 +115,9 @@ const PortDetail = () => {
             moneyType    : moneyType
         }
         axiosCall.get('/portfolio/input/won', params, function () {
-            // TODO 현재 예수금에 대한 정보가 업데이트 되는지 확인.
-            // window.location.replace(`/portfolios/${portFolioName}`);
+            setMoney('');
+            setMoneyType('won');
+            setIsMoneySubmit(true);
         })
     }
 
@@ -112,7 +126,7 @@ const PortDetail = () => {
      * @param e
      */
     const onCurrencyHandler = (e) => {
-        const currentMoneyType = e.target.id;
+        const currentMoneyType = e.target.value;
         setMoneyType(currentMoneyType);
         if (currentMoneyType) setIsMoneyType(true);
     }
@@ -127,101 +141,63 @@ const PortDetail = () => {
     return (
         <Container>
             <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
-            <Box sx={{width:'50%', float:'left'}}>
-                <DetailAssetsCards show={isModalShow}/>
+            <Box sx={{width: '50%', float: 'left'}}>
+                <DetailAssetsCards show={isModalShow} isMoneySubmit={isMoneySubmit}/>
                 <PieChart detailData={detailData}/>
             </Box>
-            <Box sx={{width:'50%', float:'right'}}>
-                <Button variant="outlined" size="medium" onClick={onStockBuyHandler}>종목 매수</Button>
-                <Button variant="outlined" size="medium" onClick={onStockSellHandler}>종목 매도</Button>
-                <Tabs id="controlled-tab-example" activeKey={type} onSelect={onTabSelectHandler} className="mb-3">
-                    {tabArray.map((value) => {
+            <Box sx={{width: '50%', float: 'right'}}>
+                <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockBuyHandler}>종목 매수</Button>
+                <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockSellHandler}>종목 매도</Button>
+                <TabContext value={type}>
+                    <Tabs
+                        value={type}
+                        onChange={onTabSelectHandler}
+                        variant="scrollable"
+                        scrollButtons={'auto'}
+                        aria-label="scrollable auto tabs example"
+                    >
+                        {tabArray.map((value, index)=> {
+                            return (
+                                <Tab key={index} label={getMsg(value)} value={value}/>
+                            )
+                        })}
+                        <Tab label='종목 편집' value='stockEdit'/>
+                        <Tab label='입출금' value='moneyEdit'/>
+                    </Tabs>
+                    {tabArray.map((value, index)=> {
                         return (
-                            <Tab key={value} eventKey={value} title={getMsg(value)}>
-                                <div className="right-Stock-Container">
-                                    <DetailStockCards detailData={detailData}/>
-                                </div>
-                            </Tab>
+                            <TabPanel key={index} value={value} sx={{padding : 0}}>
+                                <DetailStockCards detailData={detailData}/>
+                            </TabPanel>
                         )
                     })}
-                    <Tab eventKey="stockEdit" title="종목 편집">
-                        <div className="right-Stock-Container">
-
-                        </div>
-                    </Tab>
-                    <Tab eventKey="moneyEdit" title="입출금">
-                        <div className="right-Stock-Container">
-                            <Form>
-                                <FloatingLabel controlId="money" label="금액" className="mb-3">
-                                    <Form.Control type="text" placeholder="money" value={money}
-                                                  onChange={onMoneyHandler}/>
-                                </FloatingLabel>
-                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check inline name="currencyGroup" id="won" type="radio" label="원(₩)"
-                                                onChange={onCurrencyHandler}/>
-                                    <Form.Check inline name="currencyGroup" id="dollar" type="radio" label="달러($)"
-                                                onChange={onCurrencyHandler}/>
-                                </Form.Group>
-                                <Button variant="primary" id="input" disabled={!(isMoney && isMoneyType)}
-                                        onClick={onMoneyEditHandler}>입금</Button>
-                                <Button variant="primary" id="output" disabled={!(isMoney && isMoneyType)}
-                                        onClick={onMoneyEditHandler}>출금</Button>
-                            </Form>
-                        </div>
-                    </Tab>
-                </Tabs>
+                    <TabPanel value="moneyEdit">
+                        <FormControl>
+                            <FormLabel id="demo-row-radio-buttons-group-label" sx={{fontSize:12}}>통화</FormLabel>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                defaultValue="won"
+                            >
+                                <FormControlLabel value="won" onChange={onCurrencyHandler} control={<Radio />} label="원화(₩)" />
+                                <FormControlLabel value="dollar" onChange={onCurrencyHandler} control={<Radio />} label="달러($)" />
+                            </RadioGroup>
+                        </FormControl>
+                        <TextField autoFocus label="금액을 입력해주세요." type="number" fullWidth variant="standard"
+                                   inputProps={{step:0.01}}
+                                   InputProps={{startAdornment: <InputAdornment position="start">{getMsg(moneyType)}</InputAdornment>}}
+                                   value={money}
+                                   onChange={onMoneyHandler}
+                                   sx={{mb: 3}}
+                        />
+                        <Button variant="outlined" id="input" size="medium" sx={{width: '50%'}} disabled={!(isMoney && isMoneyType)}
+                                onClick={onMoneyEditHandler}>입금</Button>
+                        <Button variant="outlined" id="output" size="medium" sx={{width: '50%'}} disabled={!(isMoney && isMoneyType)}
+                                onClick={onMoneyEditHandler}>출금</Button>
+                    </TabPanel>
+                </TabContext>
             </Box>
-           {/* <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
-            <div className="detail-Left-Container">
-                <div className="left-Assets-Container">
-                    <DetailAssetsCards detailData={detailData}/>
-                </div>
-                <div className="left-Chart-Container">
-                    <PieChart detailData={detailData}/>
-                </div>
-            </div>
-            <div className="detail-Right-Container">
-                <div className="right-Btn-Container">
-                    <Button variant="outline-primary" onClick={onStockBuyHandler}>종목 매수</Button>
-                    <Button variant="outline-danger" onClick={onStockSellHandler}>종목 매도</Button>
-                </div>
-                <Tabs id="controlled-tab-example" activeKey={type} onSelect={onTabSelectHandler} className="mb-3">
-                    {tabArray.map((value) => {
-                        return (
-                            <Tab key={value} eventKey={value} title={getMsg(value)}>
-                                <div className="right-Stock-Container">
-                                    <DetailStockCards detailData={detailData}/>
-                                </div>
-                            </Tab>
-                        )
-                    })}
-                    <Tab eventKey="stockEdit" title="종목 편집">
-                        <div className="right-Stock-Container">
-
-                        </div>
-                    </Tab>
-                    <Tab eventKey="moneyEdit" title="입출금">
-                        <div className="right-Stock-Container">
-                            <Form>
-                                <FloatingLabel controlId="money" label="금액" className="mb-3">
-                                    <Form.Control type="text" placeholder="money" value={money}
-                                                  onChange={onMoneyHandler}/>
-                                </FloatingLabel>
-                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check inline name="currencyGroup" id="won" type="radio" label="원(₩)"
-                                                onChange={onCurrencyHandler}/>
-                                    <Form.Check inline name="currencyGroup" id="dollar" type="radio" label="달러($)"
-                                                onChange={onCurrencyHandler}/>
-                                </Form.Group>
-                                <Button variant="primary" id="input" disabled={!(isMoney && isMoneyType)}
-                                        onClick={onMoneyEditHandler}>입금</Button>
-                                <Button variant="primary" id="output" disabled={!(isMoney && isMoneyType)}
-                                        onClick={onMoneyEditHandler}>출금</Button>
-                            </Form>
-                        </div>
-                    </Tab>
-                </Tabs>
-            </div>*/}
         </Container>
     )
 }

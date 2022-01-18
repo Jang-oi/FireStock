@@ -10,7 +10,7 @@ import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {getStockArray, getSumValue} from "utils/arrayUtil";
 
-const DetailAssetsCards = ({show}) => {
+const DetailAssetsCards = ({show, isMoneySubmit}) => {
     const portFolioName = useParams().id;
     const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const DetailAssetsCards = ({show}) => {
         }, function () {
             navigate('/404');
         })
-    }, [coinData, navigate, portFolioName, userInfo._id, show])
+    }, [coinData, navigate, portFolioName, userInfo._id, show, isMoneySubmit])
 
     const purchasePrice = getSumValue(stockArray, 'purchasePrice')
     const totalSum = getSumValue(stockArray, 'totalSum')

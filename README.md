@@ -19,4 +19,5 @@
 * npm install @mui/x-data-grid
 * npm install @mui/x-data-grid-generator
 * npm install @mui/styles
+* npm install @mui/lab
 * npm install react-apexcharts apexcharts

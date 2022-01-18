@@ -132,12 +132,13 @@ export const getHistoryData = (historyData) => {
     const newArray = [];
     for (let i = 0; i < historyData.length; i++) {
         newArray.push({
-            id         : i,
-            regdt      : historyData[i].regdt,
-            stockName  : historyData[i].portFolioData.stockName,
-            type       : getMsg(historyData[i].type),
-            stockAmount: historyData[i].portFolioData.stockAmount,
-            stockPrice : historyData[i].portFolioData.stockAmount * historyData[i].portFolioData.stockPrice,
+            id           : i,
+            regdt        : historyData[i].regdt,
+            stockName    : historyData[i].portFolioData.stockName,
+            portFolioName: historyData[i].portFolioName,
+            type         : getMsg(historyData[i].type),
+            stockAmount  : historyData[i].portFolioData.stockAmount,
+            stockPrice   : historyData[i].portFolioData.stockAmount * historyData[i].portFolioData.stockPrice,
         })
     }
     return newArray;

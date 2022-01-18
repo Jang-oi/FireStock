@@ -55,7 +55,9 @@ export function getMsg(msgCode) {
         buy           : '종목 매수',
         sell          : '종목 매도',
         buyComplete   : '매수 성공',
-        sellComplete  : '매도 성공'
+        sellComplete  : '매도 성공',
+        won           : '₩',
+        dollar        : '$'
     }
     return message[msgCode];
 }
