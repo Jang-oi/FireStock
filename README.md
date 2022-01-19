@@ -21,3 +21,4 @@
 * npm install @mui/styles
 * npm install @mui/lab
 * npm install react-apexcharts apexcharts
+* npm install react-window

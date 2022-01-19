@@ -110,7 +110,6 @@ const TradeHistory = () => {
             width     : 200
         },
     ]
-
     return (
         <Container>
             <Box sx={{height: 800, width: '100%'}}>

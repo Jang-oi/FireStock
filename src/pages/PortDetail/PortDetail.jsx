@@ -161,7 +161,7 @@ const PortDetail = () => {
                                 <Tab key={index} label={getMsg(value)} value={value}/>
                             )
                         })}
-                        <Tab label='종목 편집' value='stockEdit'/>
+                        {/*<Tab label='종목 편집' value='stockEdit'/>*/}
                         <Tab label='입출금' value='moneyEdit'/>
                     </Tabs>
                     {tabArray.map((value, index)=> {

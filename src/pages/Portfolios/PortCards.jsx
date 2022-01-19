@@ -7,20 +7,20 @@ import {
     Grid,
     Typography
 } from "@mui/material";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import IconButton from "@mui/material/IconButton";
 
-const PortCards = ({portFolios, userInfo}) => {
+const PortCards = ({portFolios, userInfo, changeState}) => {
 
     const navigate = useNavigate();
-
     /**
      * 포트폴리오 삭제 이벤트
-     * @param e
+     * @param currentName
      */
-    const onPortDeleteHandler = (e) => {
-        const currentName = e.currentTarget.value;
+    const onPortDeleteHandler = (currentName) => {
         customAlert({
             icon             : 'warning',
-            title            : currentName + '포트폴리오를 삭제 하시겠습니까?',
+            title            : currentName + ' 포트폴리오를 삭제 하시겠습니까?',
             showCancelButton : true,
             confirmButtonText: '확인',
             cancelButtonText : '취소'
@@ -30,8 +30,8 @@ const PortCards = ({portFolios, userInfo}) => {
                     userId       : userInfo._id,
                     portFolioName: currentName
                 };
-                axiosCall.get('portfolio/delete/foliodetail', params, function () {
-                    window.location.replace("/portfolios");
+                axiosCall.get('portfolio/delete/foliodetail', params, function() {
+                    changeState();
                 })
             }
         });
@@ -41,20 +41,27 @@ const PortCards = ({portFolios, userInfo}) => {
         <Grid container>
             {Object.keys(portFolios).map((value, index) => (
                 <Grid item lg={3} md={4} sm={6} xs={12} mt={2} key={index}>
-                    <CardActionArea onClick={() => {
-                        navigate(`/portfolios/${value}`)
-                    }}>
-                        <Card sx={{minWidth: 280, display : "flex"}}>
-                            <CardContent sx={{display:'block', overflow:'hidden'}}>
-                                <CardHeader sx={{display: "block", overflow: "hidden"}} title={value} titleTypographyProps={{ noWrap: true }}/>
+                    <Card sx={{minWidth: 280, display: "flex"}}
+                          onMouseOver={() =>  document.getElementById(`delete-${index}`).style.display = 'block'}
+                          onMouseOut={() => document.getElementById(`delete-${index}`).style.display = 'none'}
+                    >
+                        <CardActionArea onClick={() => {
+                            navigate(`/portfolios/${value}`)
+                        }}>
+                            <CardContent sx={{display: 'block', overflow: 'hidden'}}>
+                                <CardHeader sx={{display: "block", overflow: "hidden"}} title={value}
+                                            titleTypographyProps={{noWrap: true}}/>
                                 <Typography component="p" variant="body2" color="text.secondary">
                                     포트폴리오 종류 : {portFolios[value].portFolioType}<br/>
                                     Created At : {portFolios[value].regDt}<br/>
                                     Updated At : {portFolios[value].upDt}
                                 </Typography>
                             </CardContent>
-                        </Card>
-                    </CardActionArea>
+                        </CardActionArea>
+                        <IconButton aria-label="settings" sx={{alignItems:'flex-start', mt:2}} onClick={()=>{onPortDeleteHandler(value)}}>
+                            <DeleteForeverIcon id={`delete-${index}`} sx={{display:'none'}}/>
+                        </IconButton>
+                    </Card>
                 </Grid>
             ))}
         </Grid>

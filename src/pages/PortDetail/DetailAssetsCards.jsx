@@ -37,8 +37,9 @@ const DetailAssetsCards = ({show, isMoneySubmit}) => {
     const totalSum = getSumValue(stockArray, 'totalSum')
     const totalProfit = getSumValue(stockArray, 'totalProfit')
     const totalEarningsRate = (!(totalProfit / purchasePrice) ? 0 : (totalProfit / purchasePrice)).toLocaleString('ko-KR', {style: "percent", minimumFractionDigits : 2});
-    const portMoney = Number(portData.portFolioWonMoney + portData.portFolioDollarMoney);
-    const portTotalMoney = Number(portMoney + totalSum);
+    const portWonMoney = Number(portData.portFolioWonMoney);
+    const portDollarMoney = Number(portData.portFolioDollarMoney);
+    const portTotalMoney = Number(portWonMoney + totalSum);
 
     return (
         <Card>
@@ -48,7 +49,7 @@ const DetailAssetsCards = ({show, isMoneySubmit}) => {
                     총 보유 자산 : {portTotalMoney.toLocaleString('ko-KR')}원<br/>
                     총 매수 금액 : {purchasePrice.toLocaleString('ko-KR')}원 <br/>
                     총 평가 금액 : {totalSum.toLocaleString('ko-KR')}원 <br/>
-                    예수금 : {portMoney.toLocaleString('ko-KR')}원
+                    예수금 : {portWonMoney.toLocaleString('ko-KR')}원
                 </Typography>
                 <Typography sx={{mt:3}} component="p" variant="body1">
                     총 평가 손익 : {totalProfit.toLocaleString('ko-KR')}원 <br/>

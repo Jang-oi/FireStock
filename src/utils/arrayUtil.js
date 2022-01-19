@@ -137,7 +137,7 @@ export const getHistoryData = (historyData) => {
             stockName    : historyData[i].portFolioData.stockName,
             portFolioName: historyData[i].portFolioName,
             type         : getMsg(historyData[i].type),
-            stockAmount  : historyData[i].portFolioData.stockAmount,
+            stockAmount  : Number(historyData[i].portFolioData.stockAmount),
             stockPrice   : historyData[i].portFolioData.stockAmount * historyData[i].portFolioData.stockPrice,
         })
     }

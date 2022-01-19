@@ -10,11 +10,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 const Portfolios = () => {
 
-    // TODO 모아보기 진행.
-
     const dispatch = useDispatch();
 
     const [isModalShow, setIsModalShow] = useState(false);
+    const [isDeletePort, setIsDeletePort] = useState(false);
 
     const userInfo = useSelector(store => store.userInfo.userInfo);
     const portFolios = useSelector(store => store.portFolios.portData);
@@ -25,7 +24,7 @@ const Portfolios = () => {
         axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function (returnData) {
             dispatch(setPortFolioData(returnData.portFolioDetailMap));
         })
-    }, [dispatch, userInfo._id, isModalShow])
+    }, [dispatch, userInfo._id, isModalShow, isDeletePort])
 
     /**
      * Modal 창이 닫힐 때 이벤트
@@ -41,9 +40,16 @@ const Portfolios = () => {
         setIsModalShow(true);
     }
 
+    /**
+     * 포트폴리오 삭제 완료 이후 이벤트
+     */
+    const onPortDeleteHandler = () => {
+        setIsDeletePort(!isDeletePort);
+    }
+
     return (
         <Container>
-            <PortCards portFolios={portFolios} userInfo={userInfo}/>
+            <PortCards portFolios={portFolios} userInfo={userInfo} changeState={onPortDeleteHandler}/>
             <Box sx={{mt:3, mx:3, textAlign: 'center'}}>
                 <Fab color="primary" aria-label="add" onClick={onPortAddHandler}><AddIcon/></Fab>
             </Box>
