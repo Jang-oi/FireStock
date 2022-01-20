@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {getMsg, makeUrlParameter} from "utils/stringUtil";
 import {axiosCall} from "utils/commonUtil";
@@ -16,9 +16,11 @@ import {
     Checkbox, FormControlLabel
 } from "@mui/material";
 import {FixedSizeList} from "react-window";
+import {getStockArray} from "../../utils/arrayUtil";
 
 const StockTradeModal = ({stockTradeType, show, changeState}) => {
     const portFolioName = useParams().id;
+    const navigate = useNavigate();
 
     const coinData = useSelector(store => store.coinData.coinData);
     const userInfo = useSelector(store => store.userInfo.userInfo);
@@ -30,6 +32,7 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
     ]
 
     const [searchArray, setSearchArray] = useState(defaultArray);
+    const [sellArray, setSellArray] = useState([]);
     const [selectStock, setSelectStock] = useState({});
 
     const [averagePrice, setAveragePrice] = useState('');
@@ -40,12 +43,36 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
 
     const [isStockModal, setIsStockModal] = useState(true);
 
+    useEffect(() => {
+        if (stockTradeType === 'sell') {
+            const params = {
+                userId       : userInfo._id,
+                type         : 'all',
+                portFolioName: portFolioName
+            }
+            axiosCall.get('/portfolio/find/foliodetail', params, function (returnData) {
+                setSearchArray(getStockArray(returnData.portFolioDataList, coinData));
+                setSellArray(getStockArray(returnData.portFolioDataList, coinData));
+            }, function () {
+                navigate('/404');
+            })
+        }
+        if (stockTradeType === 'buy') {
+            setSearchArray([
+                {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
+                {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
+                {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'}
+            ])
+        }
+    }, [coinData, navigate, portFolioName, stockTradeType, userInfo._id, show])
+
     /**
      * stockTradeModal 설정 된 값 초기화
      */
     const stockTradeModalInit = () => {
         setIsStockModal(true);
-        setSearchArray(defaultArray);
+        if(stockTradeType === 'buy') setSearchArray(defaultArray);
+        else setSearchArray(sellArray)
         setAveragePrice('');
         setQuantity('');
         setIsAveragePrice(false);
@@ -80,14 +107,15 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
      */
     const onSearchHandler = (e) => {
         const searchValue = e.currentTarget.value;
-        let searchArray = [];
-        for (let i = 0; i < coinData.length; i++) {
-            if (coinData[i].stockName.includes(searchValue)) {
-                searchArray.push(coinData[i]);
-            }
+        let searchArray;
+        if (stockTradeType === 'buy') {
+            searchArray = coinData.filter(data => data.stockName.includes(searchValue))
+            if (searchValue === '') setSearchArray(defaultArray);
+            else setSearchArray(searchArray);
+        } else {
+            searchArray = sellArray.filter(data => data.stockName.includes(searchValue))
+            setSearchArray(searchArray);
         }
-        if (searchValue === '') setSearchArray(defaultArray);
-        else setSearchArray(searchArray);
     }
 
     /**
@@ -163,16 +191,19 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
      * @returns {JSX.Element}
      */
     function renderRow(props) {
-        const { data, index, style } = props;
+        const {data, index, style} = props;
 
         return (
             <ListItem style={style} key={index}>
-                <ListItemButton onClick={(e) => {onListClickHandler(e, data[index])}}>
-                    <ListItemText primary={data[index].stockName} sx={{textAlign:'center'}}/>
+                <ListItemButton onClick={(e) => {
+                    onListClickHandler(e, data[index])
+                }}>
+                    <ListItemText primary={data[index].stockName} sx={{textAlign: 'center'}}/>
                 </ListItemButton>
             </ListItem>
         );
     }
+
     /**
      * StockTradeModal 에서 종목을 검색하는 화면
      * @returns {JSX.Element}
@@ -202,34 +233,36 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
      * StockTradeModal 에서 종목 매수, 매도 하는 화면
      * @returns {JSX.Element}
      */
-        const tradeModalBody = () => {
-            return (
-                <DialogContent>
-                    <Typography variant="h7">{selectStock.stockName}</Typography>
-                    <TextField autoFocus label="수량" type="number" fullWidth variant="standard"
-                               value={quantity}
-                               onChange={onQuantityInputHandler}
-                               sx={{mb: 3, mt :3}}
-                    />
-                    <TextField label="평균단가" type="number" fullWidth variant="standard"
-                               value={averagePrice}
-                               onChange={onAveragePriceInputHandler}
-                               sx={{mb: 3}}
-                    />
-                    <FormControlLabel
-                        sx={{width: '100%', mb:5}}
-                        control={<Checkbox value="remember" color="primary"/>}
-                        label="현재가격 적용하기" onChange={onCurrentPriceCheckHandler}
-                    />
-                    <Button variant="outlined" id="input" size="medium" sx={{width: '50%'}} onClick={onBackBtnClickHandler}>뒤로가기</Button>
-                    <Button variant="outlined" id="output" size="medium" sx={{width: '50%'}} disabled={!(isAveragePrice && isQuantity)}
-                            onClick={onStockTradeHandler}>{getMsg(stockTradeType)}</Button>
-                </DialogContent>
-            )
-        }
+    const tradeModalBody = () => {
+        return (
+            <DialogContent>
+                <Typography variant="h7">{selectStock.stockName}</Typography>
+                <TextField autoFocus label="수량" type="number" fullWidth variant="standard"
+                           value={quantity}
+                           onChange={onQuantityInputHandler}
+                           sx={{mb: 3, mt: 3}}
+                />
+                <TextField label="평균단가" type="number" fullWidth variant="standard"
+                           value={averagePrice}
+                           onChange={onAveragePriceInputHandler}
+                           sx={{mb: 3}}
+                />
+                <FormControlLabel
+                    sx={{width: '100%', mb: 5}}
+                    control={<Checkbox value="remember" color="primary"/>}
+                    label="현재가격 적용하기" onChange={onCurrentPriceCheckHandler}
+                />
+                <Button variant="outlined" id="input" size="medium" sx={{width: '50%'}}
+                        onClick={onBackBtnClickHandler}>뒤로가기</Button>
+                <Button variant="outlined" id="output" size="medium" sx={{width: '50%'}}
+                        disabled={!(isAveragePrice && isQuantity)}
+                        onClick={onStockTradeHandler}>{getMsg(stockTradeType)}</Button>
+            </DialogContent>
+        )
+    }
 
     return (
-        <Dialog open={show} onClose={onHideHandler} fullWidth sx={{zIndex:150}}>
+        <Dialog open={show} onClose={onHideHandler} fullWidth sx={{zIndex: 150}}>
             <DialogTitle>{getMsg(stockTradeType)}</DialogTitle>
             {isStockModal ? searchModalBody() : tradeModalBody()}
         </Dialog>
