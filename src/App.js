@@ -1,10 +1,9 @@
-import {Routes, Route} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import * as React from 'react'
+import {Fragment, useEffect} from 'react'
 import {axiosCall, customAxios} from "./utils/commonUtil";
 import {Reset} from 'styled-reset'
-import {Fragment, useEffect} from "react";
 import './App.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {useDispatch} from "react-redux";
 import {setCoinData} from "./modules/coinData";
@@ -19,6 +18,7 @@ import PrivateRoute from "./router/PrivateRoute";
 import PortDetail from "./pages/PortDetail/PortDetail";
 import MyPage from "./pages/MyPage/MyPage";
 import TradeHistory from "./pages/TradeHistory/TradeHistory";
+import axios from "axios";
 
 const App = () => {
 
@@ -48,22 +48,34 @@ const App = () => {
      * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
      */
     useEffect(() => {
+        getExchangeRate().then(response => {
+            window.modifiedAt = response.data[0].modifiedAt;
+            window.basePrice = response.data[0].basePrice;
+        });
         axiosCall.get('/crypto/find/allinfo', '', function (returnData) {
             const stockArray = [];
-            for (let i = 0; i < returnData.length; i++) {
-                if (returnData[i].market.includes('KRW')) {
-                    stockArray.push({
-                        stockType   : 'coin',
-                        stockInfo   : returnData[i].market,
-                        stockName   : returnData[i].korean_name,
-                        currentPrice: Number(returnData[i].trade_price)
-                    });
-                }
-            }
+            returnData.filter(value => value.market.includes('KRW'))
+                .map(value => stockArray.push({
+                    stockType   : 'coin',
+                    stockInfo   : value.market,
+                    stockName   : value.korean_name,
+                    currentPrice: Number(value.trade_price)
+                }));
             dispatch(setCoinData(stockArray));
         });
     }, [dispatch])
 
+    /**
+     * 환율 정보 가져오는 로직
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    const getExchangeRate = async() => {
+        try {
+            return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
+        } catch (e) {
+            console.log(e);
+        }
+    }
     return (
         <Fragment>
             <Reset/>

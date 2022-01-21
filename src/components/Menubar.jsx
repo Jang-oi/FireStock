@@ -37,11 +37,11 @@ const Menubar = () => {
     const onLogOutHandler = () => {
         onMenuCloseHandler();
         customAlert({
-            icon             : 'warning',
+            icon             : 'question',
             title            : '로그아웃 하시겠습니까?',
             showCancelButton : true,
-            confirmButtonText: '확인',
-            cancelButtonText : '취소'
+            confirmButtonText: 'OK',
+            cancelButtonText : 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.removeItem('token');

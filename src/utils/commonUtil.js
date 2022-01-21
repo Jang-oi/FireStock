@@ -1,5 +1,5 @@
 import axios from "axios";
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2/src/sweetalert2.js'
 import withReactContent from 'sweetalert2-react-content';
 import {getMsg, getReturnCode, getReturnData, getReturnMessage, makeUrlParameter} from "utils/stringUtil";
 
@@ -26,7 +26,8 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
         case 0 :
             customAlert({
                 icon : 'success',
-                title: returnMsg
+                title: 'Good job!',
+                text : returnMsg
             }).then(() => {
                 if (callBackFn) callBackFn(returnData)
             })
@@ -37,7 +38,8 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
         case -1 :
             customAlert({
                 icon : 'error',
-                title: returnMsg
+                title: 'Oops...',
+                text : returnMsg
             }).then(() => {
                 if (errorCallBackFn) errorCallBackFn()
             })
@@ -58,7 +60,8 @@ export function defaultAxiosError(error) {
         case 403 :
             customAlert({
                 icon : 'error',
-                title: getMsg('sessionTimeOut')
+                title: 'Oops...',
+                text : getMsg('sessionTimeOut')
             }).then(() => {
                 localStorage.removeItem('token');
                 window.location.replace("/");
@@ -67,13 +70,15 @@ export function defaultAxiosError(error) {
         case 500 :
             customAlert({
                 icon : 'error',
-                title: getMsg('serverErrMsg')
+                title: 'Oops...',
+                text : getMsg('serverErrMsg')
             })
             break;
         default :
             customAlert({
                 icon : 'error',
-                title: errorStatus
+                title: 'Oops...',
+                text : errorStatus
             });
             break;
     }

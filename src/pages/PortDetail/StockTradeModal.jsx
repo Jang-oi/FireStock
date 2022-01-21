@@ -93,7 +93,7 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
             stockInfo  : selectStock.stockInfo,
             stockName  : selectStock.stockName,
             stockType  : selectStock.stockType,
-            stockPrice : averagePrice.replace(/,/g, ""),
+            stockPrice : averagePrice,
             stockAmount: quantity
         }
         axiosCall.post(url, stockTradeData, function () {

@@ -19,18 +19,19 @@ const PortCards = ({portFolios, userInfo, changeState}) => {
      */
     const onPortDeleteHandler = (currentName) => {
         customAlert({
-            icon             : 'warning',
-            title            : currentName + ' 포트폴리오를 삭제 하시겠습니까?',
+            icon             : 'question',
+            title            : `${currentName}를 
+                                삭제 하시겠습니까?`,
             showCancelButton : true,
-            confirmButtonText: '확인',
-            cancelButtonText : '취소'
+            confirmButtonText: 'OK',
+            cancelButtonText : 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 const params = {
                     userId       : userInfo._id,
                     portFolioName: currentName
                 };
-                axiosCall.get('portfolio/delete/foliodetail', params, function() {
+                axiosCall.get('portfolio/delete/foliodetail', params, function () {
                     changeState();
                 })
             }
@@ -42,7 +43,7 @@ const PortCards = ({portFolios, userInfo, changeState}) => {
             {Object.keys(portFolios).map((value, index) => (
                 <Grid item lg={3} md={4} sm={6} xs={12} mt={2} key={index}>
                     <Card sx={{minWidth: 280, display: "flex"}}
-                          onMouseOver={() =>  document.getElementById(`delete-${index}`).style.display = 'block'}
+                          onMouseOver={() => document.getElementById(`delete-${index}`).style.display = 'block'}
                           onMouseOut={() => document.getElementById(`delete-${index}`).style.display = 'none'}
                     >
                         <CardActionArea onClick={() => {
@@ -58,8 +59,10 @@ const PortCards = ({portFolios, userInfo, changeState}) => {
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
-                        <IconButton aria-label="settings" sx={{alignItems:'flex-start', mt:2}} onClick={()=>{onPortDeleteHandler(value)}}>
-                            <DeleteForeverIcon id={`delete-${index}`} sx={{display:'none'}}/>
+                        <IconButton aria-label="settings" sx={{alignItems: 'flex-start', mt: 2}} onClick={() => {
+                            onPortDeleteHandler(value)
+                        }}>
+                            <DeleteForeverIcon id={`delete-${index}`} sx={{display: 'none'}}/>
                         </IconButton>
                     </Card>
                 </Grid>
