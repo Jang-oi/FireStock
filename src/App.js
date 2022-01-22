@@ -1,7 +1,7 @@
 import {Route, Routes} from 'react-router-dom';
 import * as React from 'react'
-import {Fragment, useEffect} from 'react'
-import {axiosCall} from "./utils/commonUtil";
+import {Fragment, useEffect, useState} from 'react'
+import {axiosCall, customAxios} from "./utils/commonUtil";
 import {Reset} from 'styled-reset'
 import './App.scss';
 
@@ -25,6 +25,33 @@ import Footer from "./components/Footer";
 const App = () => {
 
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+
+    /**
+     * axios then 이나 catch 처리되기 전의 요청 응답의 공통 기능 처리
+     */
+    customAxios.interceptors.request.use(
+        config => {
+            config.headers['X-AUTH-TOKEN'] = localStorage.getItem('token');
+            setLoading(true);
+            return config;
+        },
+        error => {
+            setLoading(true);
+            return Promise.reject(error);
+        }
+    )
+    customAxios.interceptors.response.use(
+        config => {
+            setLoading(false);
+            return config;
+        },
+        error => {
+            setLoading(false);
+            return Promise.reject(error);
+        }
+    )
+
 
     /**
      * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
@@ -49,7 +76,7 @@ const App = () => {
 
     /**
      * 환율 정보 가져오는 로직
-     * @returns {Promise<AxiosResponse<any>>}
+     * @returns {Promise<any>}
      */
     const getExchangeRate = async() => {
         try {
@@ -63,7 +90,7 @@ const App = () => {
         <Fragment>
             <Reset/>
             <Menubar/>
-            {window.loading && <Loading/>}
+            {loading && <Loading/>}
             <Routes>
                 <Route path="/" element={<PrivateRoute/>}>
                     <Route path="/" element={<Main/>}/>

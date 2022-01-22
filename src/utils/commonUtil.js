@@ -9,31 +9,8 @@ import {getMsg, getReturnCode, getReturnData, getReturnMessage, makeUrlParameter
  */
 export const customAxios = axios.create({
     baseURL: 'http://localhost:8080/api/v1',
-    timeout: 3000,
+    timeout: 3000
 });
-
-/**
- * axios then 이나 catch 처리되기 전의 요청 응답의 공통 기능 처리
- */
-customAxios.interceptors.request.use(
-    config => {
-        config.headers['X-AUTH-TOKEN'] = localStorage.getItem('token');
-        window.loading = true;
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-)
-customAxios.interceptors.response.use(
-    config => {
-        window.loading = false;
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-)
 
 /**
  * Axios 가 정상적으로 호출 됐을 때의 로직
@@ -78,33 +55,43 @@ export function defaultAxiosCall(response, callBackFn, errorCallBackFn) {
  * @param error
  */
 export function defaultAxiosError(error) {
-    const errorStatus = error.response.status;
-    switch (errorStatus) {
-        case 403 :
-            customAlert({
-                icon : 'error',
-                title: 'Oops...',
-                text : getMsg('sessionTimeOut')
-            }).then(() => {
-                localStorage.removeItem('token');
-                window.location.replace("/");
-            });
-            break;
-        case 500 :
-            customAlert({
-                icon : 'error',
-                title: 'Oops...',
-                text : getMsg('serverErrMsg')
-            })
-            break;
-        default :
-            customAlert({
-                icon : 'error',
-                title: 'Oops...',
-                text : errorStatus
-            });
-            break;
+    try {
+        const errorStatus = error.response.status;
+        switch (errorStatus) {
+            case 403 :
+                customAlert({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text : getMsg('sessionTimeOut')
+                }).then(() => {
+                    localStorage.removeItem('token');
+                    window.location.replace("/");
+                });
+                break;
+            case 500 :
+                customAlert({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text : getMsg('serverErrMsg')
+                })
+                break;
+            default :
+                customAlert({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text : errorStatus
+                });
+                break;
+        }
+    } catch (e) {
+        customAlert({
+            icon : 'error',
+            title: 'Oops...',
+            text : getMsg('serverErrMsg')
+        })
     }
+
+
 }
 
 /**
