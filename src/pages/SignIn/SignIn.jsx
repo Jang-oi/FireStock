@@ -5,12 +5,10 @@ import {useDispatch} from "react-redux";
 import {setUserInfo} from "modules/userInfo";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import Copyright from 'components/Copyright';
 import {
     Avatar,
     Box,
     Container,
-    CssBaseline,
     Typography,
     TextField,
     Button, FormControlLabel, Checkbox, Grid
@@ -99,8 +97,7 @@ const SignIn = () => {
 
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline/>
+        <Container maxWidth="xs">
             <Box
                 sx={{
                     marginTop    : 8,
@@ -159,7 +156,6 @@ const SignIn = () => {
                     </Button>
                 </Box>
             </Box>
-            <Copyright sx={{mt: 5}}/>
         </Container>
     )
 }

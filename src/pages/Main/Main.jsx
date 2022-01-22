@@ -15,12 +15,13 @@ const Main = () => {
 
     useEffect(() => {
         axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function (returnData) {
-            const testArray = Object.values(returnData.portFolioDetailMap);
-            let test = [];
-            for (let i = 0; i < testArray.length; i++) {
-                test.push(getStockArray(testArray[i].portFolioDataList, coinData))
-            }
-            console.log(test);
+            console.log(returnData);
+            // const testArray = Object.values(returnData.portFolioDetailMap);
+            // let test = [];
+            // for (let i = 0; i < testArray.length; i++) {
+            //     test.push(getStockArray(testArray[i].portFolioDataList, coinData))
+            // }
+            // console.log(test);
             // setPortData(returnData);
             // setStockArray(getStockArray(returnData.portFolioDataList, coinData));
         })
@@ -31,7 +32,7 @@ const Main = () => {
     return (
         <Container>
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{mt:3}}>
                     <Card sx={{height: '100%', mb: 3}}>
                         <CardContent>
                             <Typography color="textSecondary" gutterBottom variant="overline">

@@ -2,12 +2,10 @@ import {useNavigate} from "react-router-dom";
 import 'styles/Sign.scss'
 import {useState} from "react";
 import {axiosCall} from "utils/commonUtil";
-import Copyright from 'components/Copyright';
 import {
     Avatar,
     Box,
     Container,
-    CssBaseline,
     Grid,
     Typography,
     TextField,
@@ -30,6 +28,10 @@ const SignUp = () => {
     const [isId, setIsId] = useState(false);
     const [isPw, setIsPw] = useState(false);
 
+    const [isNameError, setIsNameError] = useState(false);
+    const [isIdError, setIsIdError] = useState(false);
+    const [isPwError, setIsPwError] = useState(false);
+
 
     /**
      * 이름 입력 시 이벤트
@@ -44,9 +46,11 @@ const SignUp = () => {
         if (!nameRegex.test(currentName)) {
             setNameMsg('이름은 2~6글자의 한글로만 입력해주세요.');
             setIsName(false);
+            setIsNameError(true);
         } else {
             setNameMsg('올바른 형식입니다. ');
             setIsName(true);
+            setIsNameError(false);
         }
 
     }
@@ -64,9 +68,11 @@ const SignUp = () => {
         if (!idRegex.test(currentId)) {
             setIdMsg('ID는 4~12글자의 영문 숫자로만 입력해주세요.');
             setIsId(false);
+            setIsIdError(true);
         } else {
             setIdMsg('올바른 형식입니다. ');
             setIsId(true);
+            setIsIdError(false);
         }
     }
 
@@ -82,9 +88,11 @@ const SignUp = () => {
         if (!pwRegex.test(currentPw)) {
             setPwMsg('숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해주세요.');
             setIsPw(false);
+            setIsPwError(true);
         } else {
             setPwMsg('올바른 형식입니다. ');
             setIsPw(true);
+            setIsPwError(false);
         }
     }
 
@@ -105,8 +113,7 @@ const SignUp = () => {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline/>
+        <Container maxWidth="xs">
             <Box
                 sx={{
                     marginTop    : 8,
@@ -125,6 +132,7 @@ const SignUp = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
+                                error={isNameError}
                                 variant="standard"
                                 fullWidth
                                 autoFocus
@@ -139,6 +147,7 @@ const SignUp = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error={isIdError}
                                 variant="standard"
                                 fullWidth
                                 id="id"
@@ -152,6 +161,7 @@ const SignUp = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error={isPwError}
                                 variant="standard"
                                 fullWidth
                                 id="password"
@@ -176,7 +186,6 @@ const SignUp = () => {
                     </Button>
                 </Box>
             </Box>
-            <Copyright sx={{mt: 5}}/>
         </Container>
     )
 }

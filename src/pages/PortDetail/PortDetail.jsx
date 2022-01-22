@@ -10,7 +10,6 @@ import StockTradeModal from "./StockTradeModal";
 import DetailAssetsCards from "./DetailAssetsCards";
 import {PieChart} from "components/Charts";
 import {
-    Box,
     Container,
     Button,
     Tab,
@@ -19,7 +18,7 @@ import {
     InputAdornment,
     FormControl,
     FormLabel,
-    RadioGroup, FormControlLabel, Radio
+    RadioGroup, FormControlLabel, Radio, Grid
 } from "@mui/material";
 import {TabContext, TabPanel} from "@mui/lab";
 
@@ -141,63 +140,72 @@ const PortDetail = () => {
     return (
         <Container>
             <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
-            <Box sx={{width: '50%', float: 'left'}}>
-                <DetailAssetsCards show={isModalShow} isMoneySubmit={isMoneySubmit}/>
-                <PieChart detailData={detailData}/>
-            </Box>
-            <Box sx={{width: '50%', float: 'right'}}>
-                <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockBuyHandler}>종목 매수</Button>
-                <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockSellHandler}>종목 매도</Button>
-                <TabContext value={type}>
-                    <Tabs
-                        value={type}
-                        onChange={onTabSelectHandler}
-                        variant="scrollable"
-                        scrollButtons={'auto'}
-                        aria-label="scrollable auto tabs example"
-                    >
-                        {tabArray.map((value, index)=> {
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <DetailAssetsCards show={isModalShow} isMoneySubmit={isMoneySubmit}/>
+                    <PieChart detailData={detailData}/>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockBuyHandler}>종목 매수</Button>
+                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockSellHandler}>종목 매도</Button>
+                    <TabContext value={type}>
+                        <Tabs
+                            value={type}
+                            onChange={onTabSelectHandler}
+                            variant="scrollable"
+                            scrollButtons={'auto'}
+                            aria-label="scrollable auto tabs example"
+                        >
+                            {tabArray.map((value, index) => {
+                                return (
+                                    <Tab key={index} label={getMsg(value)} value={value}/>
+                                )
+                            })}
+                            {/*<Tab label='종목 편집' value='stockEdit'/>*/}
+                            <Tab label='입출금' value='moneyEdit'/>
+                        </Tabs>
+                        {tabArray.map((value, index) => {
                             return (
-                                <Tab key={index} label={getMsg(value)} value={value}/>
+                                <TabPanel key={index} value={value} sx={{padding: 0}}>
+                                    <DetailStockCards detailData={detailData}/>
+                                </TabPanel>
                             )
                         })}
-                        {/*<Tab label='종목 편집' value='stockEdit'/>*/}
-                        <Tab label='입출금' value='moneyEdit'/>
-                    </Tabs>
-                    {tabArray.map((value, index)=> {
-                        return (
-                            <TabPanel key={index} value={value} sx={{padding : 0}}>
-                                <DetailStockCards detailData={detailData}/>
-                            </TabPanel>
-                        )
-                    })}
-                    <TabPanel value="moneyEdit">
-                        <FormControl>
-                            <FormLabel id="demo-row-radio-buttons-group-label" sx={{fontSize:12}}>통화</FormLabel>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                defaultValue="won"
-                            >
-                                <FormControlLabel value="won" onChange={onCurrencyHandler} control={<Radio />} label="원화(₩)" />
-                                <FormControlLabel value="dollar" onChange={onCurrencyHandler} control={<Radio />} label="달러($)" />
-                            </RadioGroup>
-                        </FormControl>
-                        <TextField autoFocus label="금액을 입력해주세요." type="number" fullWidth variant="standard"
-                                   inputProps={{step:0.01}}
-                                   InputProps={{startAdornment: <InputAdornment position="start">{getMsg(moneyType)}</InputAdornment>}}
-                                   value={money}
-                                   onChange={onMoneyHandler}
-                                   sx={{mb: 3}}
-                        />
-                        <Button variant="outlined" id="input" size="medium" sx={{width: '50%'}} disabled={!(isMoney && isMoneyType)}
-                                onClick={onMoneyEditHandler}>입금</Button>
-                        <Button variant="outlined" id="output" size="medium" sx={{width: '50%'}} disabled={!(isMoney && isMoneyType)}
-                                onClick={onMoneyEditHandler}>출금</Button>
-                    </TabPanel>
-                </TabContext>
-            </Box>
+                        <TabPanel value="moneyEdit">
+                            <FormControl>
+                                <FormLabel id="demo-row-radio-buttons-group-label" sx={{fontSize: 12}}>통화</FormLabel>
+                                <RadioGroup
+                                    row
+                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                    name="row-radio-buttons-group"
+                                    defaultValue="won"
+                                >
+                                    <FormControlLabel value="won" onChange={onCurrencyHandler} control={<Radio/>}
+                                                      label="원화(₩)"/>
+                                    <FormControlLabel value="dollar" onChange={onCurrencyHandler} control={<Radio/>}
+                                                      label="달러($)"/>
+                                </RadioGroup>
+                            </FormControl>
+                            <TextField autoFocus label="금액을 입력해주세요." type="number" fullWidth variant="standard"
+                                       inputProps={{step: 0.01}}
+                                       InputProps={{
+                                           startAdornment: <InputAdornment
+                                               position="start">{getMsg(moneyType)}</InputAdornment>
+                                       }}
+                                       value={money}
+                                       onChange={onMoneyHandler}
+                                       sx={{mb: 3}}
+                            />
+                            <Button variant="outlined" id="input" size="medium" sx={{width: '50%'}}
+                                    disabled={!(isMoney && isMoneyType)}
+                                    onClick={onMoneyEditHandler}>입금</Button>
+                            <Button variant="outlined" id="output" size="medium" sx={{width: '50%'}}
+                                    disabled={!(isMoney && isMoneyType)}
+                                    onClick={onMoneyEditHandler}>출금</Button>
+                        </TabPanel>
+                    </TabContext>
+                </Grid>
+            </Grid>
         </Container>
     )
 }
