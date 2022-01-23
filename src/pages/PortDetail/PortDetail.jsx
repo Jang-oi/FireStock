@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import DetailStockCards from "./DetailStockCards";
 import {axiosCall} from "utils/commonUtil";
-import {getStockArray} from 'utils/arrayUtil';
+import {getArrayKey, getStockArray} from 'utils/arrayUtil';
 import {setPortDetailData} from "modules/portDetail";
 import {getMsg} from "utils/stringUtil";
 import StockTradeModal from "./StockTradeModal";
@@ -137,17 +137,48 @@ const PortDetail = () => {
         setIsModalShow(false);
     }
 
+    /**
+     * 차트를 위한 옵션 및 데이터
+     */
+    const chartOptions = {
+        cardOptions: {
+            title: '종목 구성',
+            sx   : {
+                mt: 3
+            },
+        },
+        data       : {detailData},
+        options    : {
+            labels    : getArrayKey(detailData, 'stockName'),
+            legend    : {
+                position: 'bottom'
+            },
+            responsive: [{
+                breakpoint: 600,
+                options   : {
+                    chart: {
+                        width: 250
+                    },
+                }
+            }],
+        },
+        width      : 350,
+        series     : getArrayKey(detailData, 'totalSum'),
+    }
+
     return (
         <Container>
             <StockTradeModal stockTradeType={stockTradeType} show={isModalShow} changeState={onChangeHandler}/>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <DetailAssetsCards show={isModalShow} isMoneySubmit={isMoneySubmit}/>
-                    <PieChart detailData={detailData}/>
+                    <PieChart chartOptions={chartOptions}/>
                 </Grid>
                 <Grid item xs={6}>
-                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockBuyHandler}>종목 매수</Button>
-                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockSellHandler}>종목 매도</Button>
+                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockBuyHandler}>종목
+                        매수</Button>
+                    <Button variant="outlined" size="medium" sx={{width: '50%'}} onClick={onStockSellHandler}>종목
+                        매도</Button>
                     <TabContext value={type}>
                         <Tabs
                             value={type}

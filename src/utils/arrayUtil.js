@@ -116,11 +116,7 @@ export const getSumValue = (data, key) => {
  * @returns {*[]}
  */
 export const getArrayKey = (data, key) => {
-    const newArray = [];
-    for (let i = 0; i < data.length; i++) {
-        newArray.push(data[i][key]);
-    }
-    return newArray
+    return data.map(data => data[key]);
 }
 
 /**
