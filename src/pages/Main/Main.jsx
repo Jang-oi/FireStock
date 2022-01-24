@@ -1,10 +1,9 @@
 import {Avatar, Card, CardContent, Container, Grid, Typography} from '@mui/material';
 import {useEffect, useState} from "react";
-import {axiosCall} from "../../utils/commonUtil";
+import {axiosCall} from "utils/commonUtil";
 import {useSelector} from "react-redux";
 import {getArrayKey, getStockArray} from "../../utils/arrayUtil";
-import MoneyIcon from '@mui/icons-material/Money';
-import {PieChart} from "../../components/Charts";
+import {PieChart} from "components/Charts";
 
 const Main = () => {
 
