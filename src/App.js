@@ -8,24 +8,29 @@ import './App.scss';
 import {useDispatch} from "react-redux";
 import {setCoinData} from "./modules/coinData";
 
+import PublicRoute from "./router/PublicRoute";
+import PrivateRoute from "./router/PrivateRoute";
+import axios from "axios";
+
 import Main from "./pages/Main/Main";
 import Menubar from "./components/Menubar";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import Portfolios from "./pages/Portfolios/Portfolios";
 import NotFound from "./pages/NotFound/NotFound";
-import PrivateRoute from "./router/PrivateRoute";
 import PortDetail from "./pages/PortDetail/PortDetail";
 import MyPage from "./pages/MyPage/MyPage";
 import TradeHistory from "./pages/TradeHistory/TradeHistory";
-import axios from "axios";
 import Loading from "./components/Loding";
 import Footer from "./components/Footer";
+import Manage from "./pages/Manage/Manage";
+
 
 const App = () => {
 
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    let managePopup;
 
     /**
      * axios then 이나 catch 처리되기 전의 요청 응답의 공통 기능 처리
@@ -78,11 +83,22 @@ const App = () => {
      * 환율 정보 가져오는 로직
      * @returns {Promise<any>}
      */
-    const getExchangeRate = async() => {
+    const getExchangeRate = async () => {
         try {
             return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    /**
+     * 관리자 페이지로 이동.
+     * @param e
+     */
+    window.onkeydown = (e) => {
+        if (e.key === 'F9') {
+            if(!managePopup || managePopup.closed) managePopup = window.open('http://localhost:3000/manage', "manage", "_blank");
+            else managePopup.focus();
         }
     }
 
@@ -98,9 +114,12 @@ const App = () => {
                     <Route path="/trade-history" element={<TradeHistory/>}/>
                     <Route path="/portfolios" element={<Portfolios/>}/>
                     <Route path="/portfolios/:id" element={<PortDetail/>}/>
+                    <Route path="/manage" element={<Manage/>}/>
                 </Route>
-                <Route path="/sign-in" element={<SignIn/>}/>
-                <Route path="/sign-up" element={<SignUp/>}/>
+                <Route path="/" element={<PublicRoute/>}>
+                    <Route path="/sign-in" element={<SignIn/>}/>
+                    <Route path="/sign-up" element={<SignUp/>}/>
+                </Route>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
             <Footer/>

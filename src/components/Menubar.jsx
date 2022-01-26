@@ -60,33 +60,16 @@ const Menubar = () => {
             <Fragment>
                 <Button onClick={() => navigate('/portfolios')}>PORTFOLIOS</Button>
                 <Button id="fade-button" onClick={onMenuClickHandler}>MY PAGE</Button>
-                <Menu
-                    id="fade-menu"
-                    anchorEl={menuItem}
-                    open={open}
-                    onClose={onMenuCloseHandler}
-                >
-                    <MenuItem onClick={() => {
-                        navigate('/my-page')
-                        onMenuCloseHandler();
-                    }}>Account</MenuItem>
-                    <MenuItem onClick={() => {
-                        navigate('/trade-history')
-                        onMenuCloseHandler();
-                    }}>History</MenuItem>
+                <Menu id="fade-menu" anchorEl={menuItem} open={open} onClose={onMenuCloseHandler}>
+                    <MenuItem onClick={() => { navigate('/my-page');onMenuCloseHandler();}}>Account</MenuItem>
+                    <MenuItem onClick={() => { navigate('/trade-history');onMenuCloseHandler();}}>History</MenuItem>
                     <MenuItem onClick={onLogOutHandler}>Logout</MenuItem>
                 </Menu>
             </Fragment>
             :
             <Fragment>
-                <Button onClick={() => {
-                    navigate('/sign-in')
-                    onMenuCloseHandler();
-                }}>SIGN-IN</Button>
-                <Button onClick={() => {
-                    navigate('/sign-up')
-                    onMenuCloseHandler();
-                }}>SIGN-UP</Button>
+                <Button onClick={() => {navigate('/sign-in');onMenuCloseHandler();}}>SIGN-IN</Button>
+                <Button onClick={() => {navigate('/sign-up');onMenuCloseHandler();}}>SIGN-UP</Button>
             </Fragment>
 
     }

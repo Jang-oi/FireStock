@@ -11,6 +11,9 @@ const Footer = () => {
                 <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
                     for FIRE
                 </Typography>
+                <Typography variant="body2" align="center" color="text.secondary" component="p">
+                    주가 정보는 오전 6시 오후 6시에 업데이트 됩니다.
+                </Typography>
             </Container>
         </Box>
     )
