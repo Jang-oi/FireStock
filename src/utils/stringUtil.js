@@ -57,7 +57,9 @@ export function getMsg(msgCode) {
         buyComplete   : '매수 성공',
         sellComplete  : '매도 성공',
         won           : '₩',
-        dollar        : '$'
+        dollar        : '$',
+        stockSetting  : '주식 종목 설정',
+        directLogin   : '다이렉트 로그인'
     }
     return message[msgCode];
 }

@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {customAlert} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {initUserInfo} from "modules/userInfo";
@@ -9,9 +9,8 @@ const Menubar = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
     const isToken = localStorage.getItem('token')
-
+    const isManage = useLocation().pathname === '/manage'
     const [menuItem, setMenuItem] = useState(null);
     const open = Boolean(menuItem);
 
@@ -73,20 +72,27 @@ const Menubar = () => {
             </Fragment>
 
     }
+
+    /**
+     * 관리자 페이지 조회
+     * @returns {JSX.Element}
+     */
+    const getManageMenuElement = () => {
+        return (
+            <Fragment>
+                <Button onClick={() => {navigate('/manage');onMenuCloseHandler();}}>Manage</Button>
+            </Fragment>
+            )
+    }
+
     return (
         <Container>
             <Toolbar sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Button onClick={() => navigate('/')}>Fire Stock</Button>
-                <Typography
-                    component="h2"
-                    variant="h5"
-                    color="inherit"
-                    align="center"
-                    noWrap
-                    sx={{flex: 1}}
-                >
+                <Typography component="h2" variant="h5" color="inherit" align="center" noWrap sx={{flex: 1}}>
+                    For
                 </Typography>
-                {getMenuElement()}
+                {isManage ? getManageMenuElement() : getMenuElement()}
             </Toolbar>
         </Container>
     )

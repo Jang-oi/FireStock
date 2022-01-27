@@ -1,29 +1,16 @@
-import {Avatar, Card, CardContent, Container, Grid, Typography} from '@mui/material';
-import {useEffect, useState} from "react";
+import {Card, CardContent, Container, Grid, Typography} from '@mui/material';
+import {useEffect} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {useSelector} from "react-redux";
-import {getArrayKey, getStockArray} from "../../utils/arrayUtil";
 import {PieChart} from "components/Charts";
 
 const Main = () => {
 
     const userInfo = useSelector(store => store.userInfo.userInfo);
-    const coinData = useSelector(store => store.coinData.coinData);
-
-    const [portData, setPortData] = useState();
-    const [stockArray, setStockArray] = useState();
 
     useEffect(() => {
         axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function (returnData) {
-            console.log(returnData);
-            // const testArray = Object.values(returnData.portFolioDetailMap);
-            // let test = [];
-            // for (let i = 0; i < testArray.length; i++) {
-            //     test.push(getStockArray(testArray[i].portFolioDataList, coinData))
-            // }
-            // console.log(test);
-            // setPortData(returnData);
-            // setStockArray(getStockArray(returnData.portFolioDataList, coinData));
+
         })
     }, [userInfo._id])
 
