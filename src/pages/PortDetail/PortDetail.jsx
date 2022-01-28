@@ -142,7 +142,7 @@ const PortDetail = () => {
      */
     const chartOptions = {
         cardOptions: {
-            title: '종목 구성',
+            title: '구성 비중',
             sx   : {
                 mt: 3
             },
@@ -151,7 +151,10 @@ const PortDetail = () => {
         options    : {
             labels    : getArrayKey(detailData, 'stockName'),
             legend    : {
-                position: 'bottom'
+                position: 'right',
+                formatter: function (val, opts) {
+                    return val + " - " + opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1) + "%";
+                }
             },
             responsive: [{
                 breakpoint: 600,

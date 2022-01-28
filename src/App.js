@@ -98,7 +98,9 @@ const App = () => {
     window.onkeydown = (e) => {
         if (e.key === 'F9') {
             if(window.opener) return;
-            if(!managePopup || managePopup.closed) managePopup = window.open('http://localhost:3000/manage', "manage", "_blank");
+            const popupOption = 'width=850, height=1000, left=200';
+            if(!managePopup || managePopup.closed) managePopup = window.open('http://localhost:3000/manage',
+                "manage", popupOption);
             else managePopup.focus();
         }
     }

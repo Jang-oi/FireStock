@@ -14,7 +14,7 @@ const Main = () => {
         })
     }, [userInfo._id])
 
-    const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '비유동 자산'];
+    const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '비유동 자산', '현금성 자산'];
 
     /**
      * 차트를 위한 옵션 및 데이터
@@ -30,7 +30,10 @@ const Main = () => {
             width     : 1200,
             labels    : ['국내주식', '해외주식', '암호화폐', '비유동 자산', '현금성 자산'],
             legend    : {
-                position: 'bottom'
+                position: 'right',
+                formatter: function (val, opts) {
+                    return val + " - " + opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1) + "%";
+                }
             },
             responsive: [
                 {
@@ -91,7 +94,7 @@ const Main = () => {
                 </Grid>
                 {assetArray.map((value, index) => {
                     return (
-                        <Grid item xs={6} key={index}>
+                        <Grid item xs={4} key={index}>
                             <Card sx={{height: '100%', mb: 3}}>
                                 <CardContent>
                                     <Typography color="textSecondary" gutterBottom variant="overline">
@@ -105,18 +108,6 @@ const Main = () => {
                         </Grid>
                     )
                 })}
-                <Grid item xs={12}>
-                    <Card sx={{height: '100%', mb: 3}}>
-                        <CardContent>
-                            <Typography color="textSecondary" gutterBottom variant="overline">
-                                현금성 자산
-                            </Typography>
-                            <Typography color="textPrimary" variant="h4">
-                                $24k
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
                 <Grid item xs={6}>
                     <PieChart chartOptions={chartOptions}/>
                 </Grid>

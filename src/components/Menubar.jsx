@@ -88,9 +88,8 @@ const Menubar = () => {
     return (
         <Container>
             <Toolbar sx={{borderBottom: 1, borderColor: 'divider'}}>
-                <Button onClick={() => navigate('/')}>Fire Stock</Button>
+                <Button onClick={() => {if(!isManage) navigate('/')}}>Fire Stock</Button>
                 <Typography component="h2" variant="h5" color="inherit" align="center" noWrap sx={{flex: 1}}>
-                    For
                 </Typography>
                 {isManage ? getManageMenuElement() : getMenuElement()}
             </Toolbar>

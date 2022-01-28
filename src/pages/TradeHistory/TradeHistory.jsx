@@ -76,39 +76,12 @@ const TradeHistory = () => {
     };
 
     const historyColumns = [
-        {
-            field     : "regdt",
-            headerName: "체결 시간",
-            type      : 'date',
-            width     : 200
-        },
-        {
-            field     : "portFolioName",
-            headerName: "포트폴리오명",
-            width     : 200
-        },
-        {
-            field     : "stockName",
-            headerName: "종목명",
-            width     : 200
-        },
-        {
-            field     : "type",
-            headerName: "종류",
-            width     : 150
-        },
-        {
-            field     : "stockAmount",
-            headerName: "거래 수량",
-            type      : 'number',
-            width     : 150
-        },
-        {
-            field     : "stockPrice",
-            headerName: "거래 금액",
-            type      : 'number',
-            width     : 200
-        },
+        {field: "regdt", headerName: "체결 시간", type: 'date', width: 200},
+        {field: "portFolioName", headerName: "포트폴리오명", width: 200},
+        {field: "stockName", headerName: "종목명", width: 200},
+        {field: "type", headerName: "종류", width: 150},
+        {field: "stockAmount", headerName: "거래 수량", type: 'number', width: 150},
+        {field: "stockPrice", headerName: "거래 금액", type: 'number', width: 200},
     ]
     return (
         <Container>
@@ -119,8 +92,8 @@ const TradeHistory = () => {
                     columns={historyColumns}
                     componentsProps={{
                         toolbar: {
-                            value: searchText,
-                            onChange: (e) => requestSearch(e.target.value),
+                            value      : searchText,
+                            onChange   : (e) => requestSearch(e.target.value),
                             clearSearch: () => requestSearch(''),
                         },
                     }}
