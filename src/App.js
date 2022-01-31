@@ -99,7 +99,7 @@ const App = () => {
         if (e.key === 'F9') {
             if(window.opener) return;
             const popupOption = 'width=850, height=1000, left=200';
-            if(!managePopup || managePopup.closed) managePopup = window.open('https://firestock/manage',
+            if(!managePopup || managePopup.closed) managePopup = window.open('https://firestock.site/manage',
                 "manage", popupOption);
             else managePopup.focus();
         }
