@@ -95,10 +95,24 @@ const SignIn = () => {
                 window.modifiedAt = response.data[0].modifiedAt;
                 window.basePrice = response.data[0].basePrice;
             })
+            .catch(error => {
+                customAlert({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text : error
+                });
+            })
             .then(() => {
                 getCoinData()
                     .then(response => {
                         dispatch(setCoinData(response));
+                    })
+                    .catch(error => {
+                        customAlert({
+                            icon : 'error',
+                            title: 'Oops...',
+                            text : error
+                        });
                     })
                     .then(() => {
                         axiosCall.post('auth/login', signInData, function (returnData) {
@@ -109,7 +123,6 @@ const SignIn = () => {
                     })
             });
     }
-
     /**
      * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
      */
@@ -127,11 +140,7 @@ const SignIn = () => {
             });
             return stockArray;
         } catch (e) {
-            customAlert({
-                icon : 'error',
-                title: 'Oops...',
-                text : e
-            });
+            throw e;
         }
     }
 
@@ -143,11 +152,7 @@ const SignIn = () => {
         try {
             return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
         } catch (e) {
-            customAlert({
-                icon : 'error',
-                title: 'Oops...',
-                text : e
-            });
+            throw e;
         }
     }
 
