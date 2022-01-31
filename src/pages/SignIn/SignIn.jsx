@@ -1,6 +1,6 @@
 import 'styles/Sign.scss'
 import {useEffect, useState} from "react";
-import {axiosCall} from "utils/commonUtil";
+import {axiosCall, customAlert} from "utils/commonUtil";
 import {useDispatch} from "react-redux";
 import {setUserInfo} from "modules/userInfo";
 import {useCookies} from "react-cookie";
@@ -14,6 +14,8 @@ import {
     Button, FormControlLabel, Checkbox, Grid
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {setCoinData} from "../../modules/coinData";
+import axios from "axios";
 
 const SignIn = () => {
 
@@ -88,13 +90,66 @@ const SignIn = () => {
             password: pw
         }
         if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
-        axiosCall.post('auth/login', signInData, function (returnData) {
-            dispatch(setUserInfo(returnData));
-            localStorage.setItem('token', returnData.token);
-            navigate('/');
-        })
+        getExchangeRate()
+            .then(response => {
+                window.modifiedAt = response.data[0].modifiedAt;
+                window.basePrice = response.data[0].basePrice;
+            })
+            .then(() => {
+                getCoinData()
+                    .then(response => {
+                        dispatch(setCoinData(response));
+                    })
+                    .then(() => {
+                        axiosCall.post('auth/login', signInData, function (returnData) {
+                            dispatch(setUserInfo(returnData));
+                            localStorage.setItem('token', returnData.token);
+                            navigate('/');
+                        })
+                    })
+            });
     }
 
+    /**
+     * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
+     */
+    const getCoinData = async () => {
+        try {
+            const stockArray = [];
+            await axiosCall.promiseGet('/crypto/find/allinfo').then(response => {
+                response.data.data.filter(value => value.market.includes('KRW'))
+                    .map(value => stockArray.push({
+                        stockType   : 'coin',
+                        stockInfo   : value.market,
+                        stockName   : value.korean_name,
+                        currentPrice: Number(value.trade_price)
+                    }));
+            });
+            return stockArray;
+        } catch (e) {
+            customAlert({
+                icon : 'error',
+                title: 'Oops...',
+                text : e
+            });
+        }
+    }
+
+    /**
+     * 환율 정보 가져오는 로직
+     * @returns {Promise<any>}
+     */
+    const getExchangeRate = async () => {
+        try {
+            return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
+        } catch (e) {
+            customAlert({
+                icon : 'error',
+                title: 'Oops...',
+                text : e
+            });
+        }
+    }
 
     return (
         <Container maxWidth="xs">

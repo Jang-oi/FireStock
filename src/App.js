@@ -1,16 +1,12 @@
 import {Route, Routes} from 'react-router-dom';
 import * as React from 'react'
-import {Fragment, useEffect, useState} from 'react'
-import {axiosCall, customAxios} from "./utils/commonUtil";
+import {Fragment, useState} from 'react'
+import {customAxios} from "./utils/commonUtil";
 import {Reset} from 'styled-reset'
 import './App.scss';
 
-import {useDispatch} from "react-redux";
-import {setCoinData} from "./modules/coinData";
-
 import PublicRoute from "./router/PublicRoute";
 import PrivateRoute from "./router/PrivateRoute";
-import axios from "axios";
 
 import Main from "./pages/Main/Main";
 import Menubar from "./components/Menubar";
@@ -28,7 +24,6 @@ import Manage from "./pages/Manage/Manage";
 
 const App = () => {
 
-    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     let managePopup;
 
@@ -56,40 +51,6 @@ const App = () => {
             return Promise.reject(error);
         }
     )
-
-
-    /**
-     * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
-     */
-    useEffect(() => {
-        axiosCall.get('/crypto/find/allinfo', '', function (returnData) {
-            const stockArray = [];
-            returnData.filter(value => value.market.includes('KRW'))
-                .map(value => stockArray.push({
-                    stockType   : 'coin',
-                    stockInfo   : value.market,
-                    stockName   : value.korean_name,
-                    currentPrice: Number(value.trade_price)
-                }));
-            dispatch(setCoinData(stockArray));
-        });
-        getExchangeRate().then(response => {
-            window.modifiedAt = response.data[0].modifiedAt;
-            window.basePrice = response.data[0].basePrice;
-        });
-    }, [dispatch])
-
-    /**
-     * 환율 정보 가져오는 로직
-     * @returns {Promise<any>}
-     */
-    const getExchangeRate = async () => {
-        try {
-            return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
     /**
      * 관리자 페이지로 이동.

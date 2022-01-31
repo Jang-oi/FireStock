@@ -96,7 +96,7 @@ export function defaultAxiosError(error) {
 
 /**
  * Axios 호출 정의
- * @type {{post: axiosCall.post, get: axiosCall.get}}
+ * @type {{post: axiosCall.post, get: axiosCall.get, promiseGet: (function(*=, *=): Promise<AxiosResponse<any>>)}}
  */
 export const axiosCall = {
     post: (url, param, callBackFn, errorCallBackFn) => {
@@ -109,7 +109,11 @@ export const axiosCall = {
         customAxios.get(url)
             .then(response => defaultAxiosCall(response, callBackFn, errorCallBackFn))
             .catch(error => defaultAxiosError(error));
-    }
+    },
+    promiseGet : (url, param) => {
+        if (param) url = makeUrlParameter(url, param);
+        return customAxios.get(url)
+    },
 }
 
 /**
