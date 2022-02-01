@@ -112,7 +112,7 @@ const SignIn = () => {
     const getCoinData = async () => {
         try {
             const stockArray = [];
-            await axiosCall.promiseGet('/crypto/find/allinfo1').then(response => {
+            await axiosCall.promiseGet('/crypto/find/allinfo').then(response => {
                 response.data.data.filter(value => value.market.includes('KRW'))
                     .map(value => stockArray.push({
                         stockType   : 'coin',
