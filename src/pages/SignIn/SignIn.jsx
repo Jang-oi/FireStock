@@ -90,46 +90,29 @@ const SignIn = () => {
             password: pw
         }
         if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
-        getExchangeRate()
-            .then(response => {
-                window.modifiedAt = response.data[0].modifiedAt;
-                window.basePrice = response.data[0].basePrice;
-            })
-            .catch(error => {
-                customAlert({
-                    icon : 'error',
-                    title: 'Oops...',
-                    text : error
-                });
-            })
-            .then(() => {
-                getCoinData()
-                    .then(response => {
-                        dispatch(setCoinData(response));
-                    })
-                    .catch(error => {
-                        customAlert({
-                            icon : 'error',
-                            title: 'Oops...',
-                            text : error
-                        });
-                    })
-                    .then(() => {
-                        axiosCall.post('auth/login', signInData, function (returnData) {
-                            dispatch(setUserInfo(returnData));
-                            localStorage.setItem('token', returnData.token);
-                            navigate('/');
-                        })
-                    })
-            });
+        axiosCall.post('auth/login', signInData, async function (returnData) {
+
+            const exchangeRate = await getExchangeRate();
+            window.modifiedAt = exchangeRate.data[0].modifiedAt;
+            window.basePrice = exchangeRate.data[0].basePrice;
+
+            const coinData = await getCoinData()
+            dispatch(setCoinData(coinData));
+
+            dispatch(setUserInfo(returnData));
+            localStorage.setItem('token', returnData.token);
+            navigate('/');
+        })
     }
+
     /**
      * 주식, 코인의 데이터를 가져와 사용하는 값만 새로운 배열로 꺼내서 store 에 저장하는 로직
+     * @returns {Promise<*[]>}
      */
     const getCoinData = async () => {
         try {
             const stockArray = [];
-            await axiosCall.promiseGet('/crypto/find/allinfo').then(response => {
+            await axiosCall.promiseGet('/crypto/find/allinfo1').then(response => {
                 response.data.data.filter(value => value.market.includes('KRW'))
                     .map(value => stockArray.push({
                         stockType   : 'coin',
