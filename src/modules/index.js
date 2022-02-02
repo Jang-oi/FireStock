@@ -11,7 +11,7 @@ const persistConfig = {
     key : 'root',
     storage,
     // 특정 리듀서 로컬스토리지에 저장
-    whitelist: ['userInfo', 'portFolios', 'coinData']
+    whitelist: ['userInfo']
 }
 
 const rootReducer = combineReducers({

@@ -61,6 +61,7 @@ const Manage = () => {
     ]
 
     // http://api.marketstack.com/v1/eod?access_key=715010a7e314a5bbe10b77582741e495&symbols=005930.XKRX&limit=1
+    // https://api.polygon.io/v1/open-close/AAPL/2022-02-01?adjusted=true&apiKey=n2lkO6IplMXbQf5tecfwP2PLFS2cbEvr
     const rows = [
         {id: 1, stockType: '국내', stockName: '삼성전자', stockTicker: '005930.XKRX'},
         {id: 2, stockType: '국내', stockName: '드림어스컴퍼니', stockTicker: '060570.XKRX'},

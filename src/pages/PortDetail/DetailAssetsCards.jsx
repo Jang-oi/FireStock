@@ -33,7 +33,7 @@ const DetailAssetsCards = ({show, isMoneySubmit}) => {
         })
     }, [coinData, navigate, portFolioName, userInfo._id, show, isMoneySubmit])
 
-    const basePriceUSD = window.basePrice;
+    const basePriceUSD = localStorage.getItem('exchangeRate');
     const purchasePrice = getSumValue(stockArray, 'purchasePrice')
     const totalSum = getSumValue(stockArray, 'totalSum')
     const totalProfit = getSumValue(stockArray, 'totalProfit')

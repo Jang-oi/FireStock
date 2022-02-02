@@ -139,7 +139,7 @@ const SignUp = () => {
                                 id="name"
                                 label="Name"
                                 name="name"
-                                autoComplete="name"
+                                autoComplete="off"
                                 onChange={onNameHandler}
                                 value={name}
                                 helperText={nameMsg}
@@ -153,7 +153,7 @@ const SignUp = () => {
                                 id="id"
                                 label="ID"
                                 name="id"
-                                autoComplete="id"
+                                autoComplete="off"
                                 onChange={onIdHandler}
                                 value={id}
                                 helperText={idMsg}

@@ -81,6 +81,7 @@ const PortModal = ({userInfo, show, changeState}) => {
             <DialogTitle>포트폴리오 추가하기</DialogTitle>
             <DialogContent>
                 <TextField autoFocus label="포트폴리오 이름을 입력해주세요." type="text" fullWidth variant="standard"
+                           autoComplete="off"
                            value={portName}
                            onChange={onPortNameHandler}
                            sx={{mb: 3}}

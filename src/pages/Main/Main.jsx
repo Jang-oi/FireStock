@@ -83,7 +83,7 @@ const Main = () => {
                                 총 자산
                             </Typography>
                             <Typography color="textSecondary" gutterBottom variant="overline" sx={{float: 'right'}}>
-                                환율 {window.basePrice}
+                                환율 {localStorage.getItem('exchangeRate')}
                             </Typography>
                             <Typography color="textPrimary" variant="h4">
                                 $24k

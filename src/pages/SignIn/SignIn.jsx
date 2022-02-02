@@ -14,7 +14,7 @@ import {
     Button, FormControlLabel, Checkbox, Grid
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {setCoinData} from "../../modules/coinData";
+import {setCoinData} from "modules/coinData";
 import axios from "axios";
 
 const SignIn = () => {
@@ -83,24 +83,23 @@ const SignIn = () => {
      * 로그인 버튼 클릭시 이벤트
      * @param e
      */
-    const onSubmitHandler = (e) => {
+    const onSubmitHandler = async (e) => {
         e.preventDefault();
         const signInData = {
             _id     : id,
             password: pw
         }
         if (isSave) setCookie('saveId', id, {maxAge: cookieMaxAge});
+
+        const exchangeRate = await getExchangeRate();
+
+        const coinData = await getCoinData();
+        dispatch(setCoinData(coinData));
+
         axiosCall.post('auth/login', signInData, async function (returnData) {
-
-            const exchangeRate = await getExchangeRate();
-            window.modifiedAt = exchangeRate.data[0].modifiedAt;
-            window.basePrice = exchangeRate.data[0].basePrice;
-
-            const coinData = await getCoinData()
-            dispatch(setCoinData(coinData));
-
             dispatch(setUserInfo(returnData));
             localStorage.setItem('token', returnData.token);
+            localStorage.setItem('exchangeRate', exchangeRate.data[0].basePrice);
             navigate('/');
         })
     }
@@ -110,8 +109,8 @@ const SignIn = () => {
      * @returns {Promise<*[]>}
      */
     const getCoinData = async () => {
+        const stockArray = [];
         try {
-            const stockArray = [];
             await axiosCall.promiseGet('/crypto/find/allinfo').then(response => {
                 response.data.data.filter(value => value.market.includes('KRW'))
                     .map(value => stockArray.push({
@@ -123,6 +122,11 @@ const SignIn = () => {
             });
             return stockArray;
         } catch (e) {
+            customAlert({
+                icon : 'error',
+                title: 'Oops...',
+                text : e
+            });
             throw e;
         }
     }
@@ -135,8 +139,14 @@ const SignIn = () => {
         try {
             return await axios.get('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD');
         } catch (e) {
+            customAlert({
+                icon : 'error',
+                title: 'Oops...',
+                text : e
+            });
             throw e;
         }
+
     }
 
     return (
@@ -164,7 +174,7 @@ const SignIn = () => {
                                 id="id"
                                 label="ID"
                                 name="id"
-                                autoComplete="id"
+                                autoComplete="off"
                                 onChange={onIdHandler}
                                 value={id}
                                 autoFocus
@@ -178,7 +188,7 @@ const SignIn = () => {
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
+                                autoComplete="off"
                                 onChange={onPwHandler}
                                 value={pw}
                             />
