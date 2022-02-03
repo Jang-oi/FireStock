@@ -17,18 +17,22 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
+    const [nickName, setNickName] = useState('');
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
 
     const [nameMsg, setNameMsg] = useState('');
+    const [nickNameMsg, setNickNameMsg] = useState('');
     const [idMsg, setIdMsg] = useState('');
     const [pwMsg, setPwMsg] = useState('');
 
     const [isName, setIsName] = useState(false);
+    const [isNickName, setIsNickName] = useState(false);
     const [isId, setIsId] = useState(false);
     const [isPw, setIsPw] = useState(false);
 
     const [isNameError, setIsNameError] = useState(false);
+    const [isNickNameError, setIsNickNameError] = useState(false);
     const [isIdError, setIsIdError] = useState(false);
     const [isPwError, setIsPwError] = useState(false);
 
@@ -52,7 +56,26 @@ const SignUp = () => {
             setIsName(true);
             setIsNameError(false);
         }
+    }
 
+    /**
+     * 닉네임 입력 시 이벤트
+     * 닉네임 입력 시 유효성 검사 진행
+     * @param e
+     */
+    const onNickNameHandler = (e) => {
+        const currentNickName = e.currentTarget.value;
+        setNickName(currentNickName);
+
+        if (!currentNickName) {
+            setNickNameMsg('닉네임을 입력해주세요');
+            setIsNickName(false);
+            setIsNickNameError(true);
+        } else {
+            setNickNameMsg('올바른 형식입니다. ');
+            setIsNickName(true);
+            setIsNickNameError(false);
+        }
     }
 
     /**
@@ -147,6 +170,21 @@ const SignUp = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error={isNickNameError}
+                                variant="standard"
+                                fullWidth
+                                autoFocus
+                                id="nickName"
+                                label="NickName"
+                                name="nickName"
+                                autoComplete="off"
+                                onChange={onNickNameHandler}
+                                value={nickName}
+                                helperText={nickNameMsg}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
                                 error={isIdError}
                                 variant="standard"
                                 fullWidth
@@ -180,7 +218,7 @@ const SignUp = () => {
                         fullWidth
                         variant="contained"
                         sx={{mt: 3, mb: 2}}
-                        disabled={!(isId && isPw && isName)}
+                        disabled={!(isId && isPw && isName && isNickName)}
                     >
                         회원가입
                     </Button>
