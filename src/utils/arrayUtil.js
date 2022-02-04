@@ -8,7 +8,7 @@ import {getMsg} from "./stringUtil";
 
 const getStockDataCalc = (portData, apiData) => {
     const purchasePrice = Number(portData.stockPrice) * Number(portData.stockAmount);
-    const totalSum = Number(apiData.currentPrice) * Number(portData.stockAmount);
+    const totalSum = Number(apiData.currentWonPrice) * Number(portData.stockAmount);
     const totalProfit = totalSum - purchasePrice;
     const totalEarningsRate = (totalProfit / purchasePrice).toLocaleString('ko-KR', {
         style                : "percent",
@@ -53,7 +53,7 @@ export const getStockArray = (portData, apiData) => {
                     stockName        : portData[i].stockName,
                     stockPrice       : Number(portData[i].stockPrice),
                     stockAmount      : Number(portData[i].stockAmount),
-                    currentPrice     : apiData[j].currentPrice,
+                    currentPrice     : apiData[j].currentWonPrice,
                     purchasePrice    : stockData.purchasePrice,
                     totalSum         : stockData.totalSum,
                     totalProfit      : stockData.totalProfit,
@@ -76,7 +76,7 @@ export const getNonCurrentArray = (portData) => {
     const nonCurrentArray = [];
     for (let i = 0; i < portData.length; i++) {
         if (portData[i].stockType === 'nonCurrent') {
-            const stockData = getStockDataCalc(portData[i], {currentPrice: Number(portData[i].stockPrice)});
+            const stockData = getStockDataCalc(portData[i], {currentWonPrice: Number(portData[i].stockPrice)});
             nonCurrentArray.push({
                 stockType        : portData[i].stockType,
                 stockInfo        : portData[i].stockInfo,

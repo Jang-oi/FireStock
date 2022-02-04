@@ -1,21 +1,30 @@
 import {Card, CardContent, Container, Grid, Typography} from '@mui/material';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {useSelector} from "react-redux";
 import {PieChart} from "components/Charts";
+import {getStockArray} from "../../utils/arrayUtil";
 
 const Main = () => {
 
     const userInfo = useSelector(store => store.userInfo.userInfo);
+    const coinData = useSelector(store => store.coinData.coinData);
+    const [mainStockArray, setMainStockArray] = useState([]);
+    const [mainWonMoney, setMainWonMoney] = useState(0);
+    const [mainDollarMoney, setMainDollarMoney] = useState(0);
 
     useEffect(() => {
         axiosCall.get(`portfolio/find/all/portfolio/${userInfo._id}`, '', function (returnData) {
-            console.log(returnData);
+            setMainDollarMoney(returnData.portFolioDollarMoney);
+            setMainWonMoney(returnData.portFolioWonMoney);
+            setMainStockArray(getStockArray(returnData.portFolioDataList, coinData));
         })
-    }, [userInfo._id])
+    }, [coinData, userInfo._id])
 
     const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '비유동 자산', '현금성 자산'];
+    const assetSumArray = [];
 
+    console.log(mainStockArray.filter(value => value.stockType === 'coin'))
     /**
      * 차트를 위한 옵션 및 데이터
      */
@@ -73,6 +82,8 @@ const Main = () => {
         width      : 500,
         series     : [1, 2, 3, 4, 5]
     }
+
+    console.log(mainStockArray);
     return (
         <Container>
             <Grid container spacing={3}>
@@ -86,7 +97,7 @@ const Main = () => {
                                 환율 {localStorage.getItem('exchangeRate')}
                             </Typography>
                             <Typography color="textPrimary" variant="h4">
-                                $24k
+                                mainWonMoney + (mainDollarMoney * 환율) + 자산 가격
                             </Typography>
 
                         </CardContent>

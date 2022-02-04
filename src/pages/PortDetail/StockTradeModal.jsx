@@ -156,7 +156,7 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
             setAveragePrice('');
             setIsAveragePrice(false);
         } else {
-            setAveragePrice(selectStock.currentPrice);
+            setAveragePrice(selectStock.currentWonPrice);
             setIsAveragePrice(true);
         }
 

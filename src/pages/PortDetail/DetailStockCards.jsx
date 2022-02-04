@@ -2,6 +2,7 @@ import {Card, CardContent, Grid, Typography} from "@mui/material";
 import {getMsg} from "utils/stringUtil";
 
 const DetailStockCards = ({detailData}) => {
+
     return (
         <Grid container direction="column">
             {detailData.map((value, index) => (
