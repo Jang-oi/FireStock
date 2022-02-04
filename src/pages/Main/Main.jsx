@@ -9,8 +9,8 @@ const Main = () => {
     const userInfo = useSelector(store => store.userInfo.userInfo);
 
     useEffect(() => {
-        axiosCall.get('/portfolio/find/folio', {userId: userInfo._id}, function (returnData) {
-
+        axiosCall.get(`portfolio/find/all/portfolio/${userInfo._id}`, '', function (returnData) {
+            console.log(returnData);
         })
     }, [userInfo._id])
 

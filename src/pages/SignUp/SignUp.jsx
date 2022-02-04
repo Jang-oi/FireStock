@@ -173,7 +173,6 @@ const SignUp = () => {
                                 error={isNickNameError}
                                 variant="standard"
                                 fullWidth
-                                autoFocus
                                 id="nickName"
                                 label="NickName"
                                 name="nickName"

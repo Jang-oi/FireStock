@@ -94,7 +94,7 @@ const SignIn = () => {
         const exchangeRate = await getExchangeRate();
 
         const coinData = await getCoinData();
-        dispatch(setCoinData(coinData));
+        dispatch(setCoinData(coinData.data.data.filter(value => value.stockInfo.includes('KRW'))));
 
         axiosCall.post('auth/login', signInData, async function (returnData) {
             dispatch(setUserInfo(returnData));
@@ -109,18 +109,8 @@ const SignIn = () => {
      * @returns {Promise<*[]>}
      */
     const getCoinData = async () => {
-        const stockArray = [];
         try {
-            await axiosCall.promiseGet('/crypto/find/allinfo').then(response => {
-                response.data.data.filter(value => value.market.includes('KRW'))
-                    .map(value => stockArray.push({
-                        stockType   : 'coin',
-                        stockInfo   : value.market,
-                        stockName   : value.korean_name,
-                        currentPrice: Number(value.trade_price)
-                    }));
-            });
-            return stockArray;
+            return await axiosCall.promiseGet('/crypto/find/allinfo');
         } catch (e) {
             customAlert({
                 icon : 'error',
