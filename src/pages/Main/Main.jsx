@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {axiosCall} from "utils/commonUtil";
 import {useSelector} from "react-redux";
 import {PieChart} from "components/Charts";
-import {getStockArray} from "../../utils/arrayUtil";
+import {getStockArray} from "utils/arrayUtil";
 
 const Main = () => {
 
@@ -15,16 +15,40 @@ const Main = () => {
 
     useEffect(() => {
         axiosCall.get(`portfolio/find/all/portfolio/${userInfo._id}`, '', function (returnData) {
+            console.log(returnData);
             setMainDollarMoney(returnData.portFolioDollarMoney);
             setMainWonMoney(returnData.portFolioWonMoney);
             setMainStockArray(getStockArray(returnData.portFolioDataList, coinData));
         })
     }, [coinData, userInfo._id])
 
-    const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '비유동 자산', '현금성 자산'];
-    const assetSumArray = [];
+    /**
+     * 자산 정리
+     * mainTotalMoney : 전체 포트폴리오 금액 합계
+     * mainMoney : 전체 포트폴리오의 현금 합계 (원화, 달러)
+     * mainDomesticMoney : 전체 국내주식 합계
+     * mainOverseasMoney : 전체 해외주식 합계
+     * mainCoinMoney : 전체 코인 합계
+     * mainNonCurrentMoney : 그 외 자산 합계
+     */
+    let mainMoney = mainWonMoney + (mainDollarMoney * localStorage.getItem('exchangeRate'));
+    let mainTotalMoney = mainWonMoney + (mainDollarMoney * localStorage.getItem('exchangeRate'));
+    let mainDomesticMoney = 0;
+    let mainOverseasMoney = 0;
+    let mainCoinMoney = 0;
+    let mainNonCurrentMoney = 0;
 
-    console.log(mainStockArray.filter(value => value.stockType === 'coin'))
+    for (let i = 0; i < mainStockArray.length; i++) {
+        if (mainStockArray[i].stockType === 'domestic') mainDomesticMoney += mainStockArray[i].totalSum;
+        if (mainStockArray[i].stockType === 'overseas') mainOverseasMoney += mainStockArray[i].totalSum;
+        if (mainStockArray[i].stockType === 'coin') mainCoinMoney += mainStockArray[i].totalSum;
+        if (mainStockArray[i].stockType === 'nonCurrent') mainNonCurrentMoney += mainStockArray[i].totalSum;
+        mainTotalMoney += mainStockArray[i].totalSum;
+    }
+
+    const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '그 외 자산', '현금성 자산'];
+    const assetSumArray = [mainDomesticMoney, mainOverseasMoney, mainCoinMoney, mainNonCurrentMoney, mainMoney];
+
     /**
      * 차트를 위한 옵션 및 데이터
      */
@@ -36,10 +60,10 @@ const Main = () => {
             }
         },
         options    : {
-            width     : 1200,
-            labels    : ['국내주식', '해외주식', '암호화폐', '비유동 자산', '현금성 자산'],
+            width     : 1000,
+            labels    : assetArray,
             legend    : {
-                position: 'right',
+                position : 'right',
                 formatter: function (val, opts) {
                     return val + " - " + opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1) + "%";
                 }
@@ -79,11 +103,10 @@ const Main = () => {
                 }
             ],
         },
-        width      : 500,
-        series     : [1, 2, 3, 4, 5]
+        width      : 600,
+        series     : assetSumArray
     }
 
-    console.log(mainStockArray);
     return (
         <Container>
             <Grid container spacing={3}>
@@ -97,7 +120,7 @@ const Main = () => {
                                 환율 {localStorage.getItem('exchangeRate')}
                             </Typography>
                             <Typography color="textPrimary" variant="h4">
-                                mainWonMoney + (mainDollarMoney * 환율) + 자산 가격
+                                {mainTotalMoney.toLocaleString()}원<br/>
                             </Typography>
 
                         </CardContent>
@@ -112,14 +135,14 @@ const Main = () => {
                                         {value}
                                     </Typography>
                                     <Typography color="textPrimary" variant="h4">
-                                        $24k
+                                        {assetSumArray[index].toLocaleString()}원
                                     </Typography>
                                 </CardContent>
                             </Card>
                         </Grid>
                     )
                 })}
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                     <PieChart chartOptions={chartOptions}/>
                 </Grid>
             </Grid>

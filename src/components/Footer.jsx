@@ -9,7 +9,7 @@ const Footer = () => {
                     FireStock
                 </Typography>
                 <Typography variant="body2" align="center" color="text.secondary" component="p">
-                    주가 정보는 오전 6시 오후 6시에 업데이트 됩니다.
+                    주식, 코인 정보는 오전 6시에 업데이트 됩니다.
                 </Typography>
             </Container>
         </Box>

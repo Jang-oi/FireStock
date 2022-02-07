@@ -8,7 +8,7 @@ import {getMsg} from "./stringUtil";
 
 const getStockDataCalc = (portData, apiData) => {
     const purchasePrice = Number(portData.stockPrice) * Number(portData.stockAmount);
-    const totalSum = Number(apiData.currentWonPrice) * Number(portData.stockAmount);
+    const totalSum = Number(apiData.currentWonPrice || apiData.currentDollarPrice) * Number(portData.stockAmount);
     const totalProfit = totalSum - purchasePrice;
     const totalEarningsRate = (totalProfit / purchasePrice).toLocaleString('ko-KR', {
         style                : "percent",
@@ -34,7 +34,8 @@ const getStockDataCalc = (portData, apiData) => {
  * stockName            종목 이름
  * stockPrice           구매가    ( 평균 단가 )
  * stockAmount          총 수량   ( 보유 수량 )
- * currentPrice         현재 가격
+ * currentWonPrice      현재 가격 ( 원화 )
+ * currentDollarPrice   현재 가격 ( 달러 )
  * purchasePrice        매수 금액 ( 구매가 X 총 수량 )
  * totalSum             평가 금액 ( 현재가격 X 총 수량 )
  * totalProfit          평가 손익 ( 평가 금액 - 매수 금액 )
@@ -48,16 +49,17 @@ export const getStockArray = (portData, apiData) => {
             if (portData[i].stockName === apiData[j].stockName) {
                 const stockData = getStockDataCalc(portData[i], apiData[j]);
                 stockArray.push({
-                    stockType        : portData[i].stockType,
-                    stockInfo        : portData[i].stockInfo,
-                    stockName        : portData[i].stockName,
-                    stockPrice       : Number(portData[i].stockPrice),
-                    stockAmount      : Number(portData[i].stockAmount),
-                    currentPrice     : apiData[j].currentWonPrice,
-                    purchasePrice    : stockData.purchasePrice,
-                    totalSum         : stockData.totalSum,
-                    totalProfit      : stockData.totalProfit,
-                    totalEarningsRate: stockData.totalEarningsRate,
+                    stockType         : portData[i].stockType,
+                    stockInfo         : portData[i].stockInfo,
+                    stockName         : portData[i].stockName,
+                    stockPrice        : Number(portData[i].stockPrice),
+                    stockAmount       : Number(portData[i].stockAmount),
+                    currentWonPrice   : apiData[j].currentWonPrice,
+                    currentDollarPrice: apiData[j].currentDollarPrice,
+                    purchasePrice     : stockData.purchasePrice,
+                    totalSum          : stockData.totalSum,
+                    totalProfit       : stockData.totalProfit,
+                    totalEarningsRate : stockData.totalEarningsRate,
                 })
             }
         }
@@ -78,16 +80,17 @@ export const getNonCurrentArray = (portData) => {
         if (portData[i].stockType === 'nonCurrent') {
             const stockData = getStockDataCalc(portData[i], {currentWonPrice: Number(portData[i].stockPrice)});
             nonCurrentArray.push({
-                stockType        : portData[i].stockType,
-                stockInfo        : portData[i].stockInfo,
-                stockName        : portData[i].stockName,
-                stockPrice       : Number(portData[i].stockPrice),
-                stockAmount      : Number(portData[i].stockAmount),
-                currentPrice     : 0,
-                purchasePrice    : stockData.purchasePrice,
-                totalSum         : stockData.totalSum,
-                totalProfit      : stockData.totalProfit,
-                totalEarningsRate: stockData.totalEarningsRate,
+                stockType         : portData[i].stockType,
+                stockInfo         : portData[i].stockInfo,
+                stockName         : portData[i].stockName,
+                stockPrice        : Number(portData[i].stockPrice),
+                stockAmount       : Number(portData[i].stockAmount),
+                currentWonPrice   : 0,
+                currentDollarPrice: 0,
+                purchasePrice     : stockData.purchasePrice,
+                totalSum          : stockData.totalSum,
+                totalProfit       : stockData.totalProfit,
+                totalEarningsRate : stockData.totalEarningsRate,
             })
         }
     }

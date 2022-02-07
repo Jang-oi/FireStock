@@ -13,7 +13,7 @@ import {
     ListItemButton,
     ListItemText,
     Typography,
-    Checkbox, FormControlLabel
+    Checkbox, FormControlLabel, InputAdornment
 } from "@mui/material";
 import {FixedSizeList} from "react-window";
 import {getStockArray} from "../../utils/arrayUtil";
@@ -26,9 +26,9 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
     const userInfo = useSelector(store => store.userInfo.userInfo);
 
     const defaultArray = [
-        {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
-        {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
-        {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'}
+        {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentWonPrice: 0, currentDollarPrice: 0, stockInfo: 'etc'},
+        {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentWonPrice: 0, currentDollarPrice: 0, stockInfo: 'etc'},
+        {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentWonPrice: 0, currentDollarPrice: 0, stockInfo: 'etc'}
     ]
 
     const [searchArray, setSearchArray] = useState(defaultArray);
@@ -59,9 +59,27 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
         }
         if (stockTradeType === 'buy') {
             setSearchArray([
-                {stockName: '기타자산 - 부동산', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
-                {stockName: '기타자산 - 금', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'},
-                {stockName: '기타자산 - 청약', stockType: 'nonCurrent', currentPrice: 0, stockInfo: 'etc'}
+                {
+                    stockName         : '기타자산 - 부동산',
+                    stockType         : 'nonCurrent',
+                    currentWonPrice   : 0,
+                    currentDollarPrice: 0,
+                    stockInfo         : 'etc'
+                },
+                {
+                    stockName         : '기타자산 - 금',
+                    stockType         : 'nonCurrent',
+                    currentWonPrice   : 0,
+                    currentDollarPrice: 0,
+                    stockInfo         : 'etc'
+                },
+                {
+                    stockName         : '기타자산 - 청약',
+                    stockType         : 'nonCurrent',
+                    currentWonPrice   : 0,
+                    currentDollarPrice: 0,
+                    stockInfo         : 'etc'
+                }
             ])
         }
     }, [coinData, navigate, portFolioName, stockTradeType, userInfo._id, show])
@@ -71,7 +89,7 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
      */
     const stockTradeModalInit = () => {
         setIsStockModal(true);
-        if(stockTradeType === 'buy') setSearchArray(defaultArray);
+        if (stockTradeType === 'buy') setSearchArray(defaultArray);
         else setSearchArray(sellArray)
         setAveragePrice('');
         setQuantity('');
@@ -156,7 +174,7 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
             setAveragePrice('');
             setIsAveragePrice(false);
         } else {
-            setAveragePrice(selectStock.currentWonPrice);
+            setAveragePrice(selectStock.currentWonPrice || selectStock.currentDollarPrice);
             setIsAveragePrice(true);
         }
 
@@ -167,7 +185,8 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
      * @param e
      */
     const onQuantityInputHandler = (e) => {
-        const currentQuantity = e.currentTarget.value
+        let currentQuantity = e.currentTarget.value
+        currentQuantity = currentQuantity.replace(/(\.\d{2})\d+/g, '$1');
         setQuantity(currentQuantity);
         if (currentQuantity === '') setIsQuantity(false);
         else setIsQuantity(true);
@@ -241,11 +260,18 @@ const StockTradeModal = ({stockTradeType, show, changeState}) => {
                            value={quantity}
                            onChange={onQuantityInputHandler}
                            sx={{mb: 3, mt: 3}}
+                           autoComplete="off"
                 />
-                <TextField label="평균단가" type="number" fullWidth variant="standard"
+                <TextField inputProps={{step: 0.01}}
+                           InputProps={{
+                               startAdornment: <InputAdornment
+                                   position="start">{selectStock.stockType === 'overseas' ? '$' : '₩'}</InputAdornment>
+                           }}
+                           label="평균단가" type="number" fullWidth variant="standard"
                            value={averagePrice}
                            onChange={onAveragePriceInputHandler}
                            sx={{mb: 3}}
+                           autoComplete="off"
                 />
                 <FormControlLabel
                     sx={{width: '100%', mb: 5}}

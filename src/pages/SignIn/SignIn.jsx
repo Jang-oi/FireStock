@@ -94,7 +94,7 @@ const SignIn = () => {
         const exchangeRate = await getExchangeRate();
 
         const coinData = await getCoinData();
-        dispatch(setCoinData(coinData.data.data.filter(value => value.stockInfo.includes('KRW'))));
+        dispatch(setCoinData(coinData.data.data));
 
         axiosCall.post('auth/login', signInData, async function (returnData) {
             dispatch(setUserInfo(returnData));

@@ -32,7 +32,7 @@ const PortDetail = () => {
     const detailData = useSelector(store => store.portDetail.portDetailData);
 
     const [type, setType] = useState('list');
-    const tabArray = ['list', 'coin', 'nonCurrent'];
+    const tabArray = ['list', 'domestic', 'overseas', 'coin', 'nonCurrent'];
 
     const [money, setMoney] = useState('');
     const [moneyType, setMoneyType] = useState('won');
@@ -42,9 +42,11 @@ const PortDetail = () => {
     const [isMoneySubmit, setIsMoneySubmit] = useState(false);
 
     const [isModalShow, setIsModalShow] = useState(false);
+    const [isStockUpdate, setIsStockUpdate] = useState(false);
 
     useEffect(() => {
-        if (type === 'stockEdit' || type === 'moneyEdit') return;
+        setMoneyType('won');
+        if (type === 'moneyEdit') return;
         const params = {
             userId       : userInfo._id,
             type         : type,
@@ -56,7 +58,7 @@ const PortDetail = () => {
         }, function () {
             navigate('/404');
         })
-    }, [coinData, dispatch, type, portFolioName, userInfo._id, navigate, isModalShow])
+    }, [coinData, dispatch, type, portFolioName, userInfo._id, navigate, isModalShow, isStockUpdate])
 
     const [stockTradeType, setStockTradeType] = useState('');
 
@@ -138,6 +140,13 @@ const PortDetail = () => {
     }
 
     /**
+     * 카드의 종목 데이터가 편집, 삭제 될 경우의 이벤트
+     */
+    const onStockUpdateHandler = () => {
+        setIsStockUpdate(!isStockUpdate);
+    }
+
+    /**
      * 차트를 위한 옵션 및 데이터
      */
     const chartOptions = {
@@ -151,21 +160,39 @@ const PortDetail = () => {
         options    : {
             labels    : getArrayKey(detailData, 'stockName'),
             legend    : {
-                position: 'right',
+                position : 'bottom',
                 formatter: function (val, opts) {
                     return val + " - " + opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1) + "%";
                 }
             },
-            responsive: [{
-                breakpoint: 600,
-                options   : {
-                    chart: {
-                        width: 250
-                    },
-                }
-            }],
+            responsive: [
+                {
+                    breakpoint: 650,
+                    options   : {
+                        chart: {
+                            width: 275
+                        },
+                    }
+                },
+                {
+                    breakpoint: 750,
+                    options   : {
+                        chart: {
+                            width: 350
+                        },
+                    }
+                },
+                {
+                    breakpoint: 1000,
+                    options   : {
+                        chart: {
+                            width: 425
+                        },
+                    }
+                },
+            ],
         },
-        width      : 350,
+        width      : 500,
         series     : getArrayKey(detailData, 'totalSum'),
     }
 
@@ -195,13 +222,12 @@ const PortDetail = () => {
                                     <Tab key={index} label={getMsg(value)} value={value}/>
                                 )
                             })}
-                            {/*<Tab label='종목 편집' value='stockEdit'/>*/}
                             <Tab label='입출금' value='moneyEdit'/>
                         </Tabs>
                         {tabArray.map((value, index) => {
                             return (
                                 <TabPanel key={index} value={value} sx={{padding: 0}}>
-                                    <DetailStockCards detailData={detailData}/>
+                                    <DetailStockCards detailData={detailData} isStockUpdate={onStockUpdateHandler}/>
                                 </TabPanel>
                             )
                         })}
