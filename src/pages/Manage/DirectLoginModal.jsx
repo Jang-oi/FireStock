@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Dialog, DialogContent, DialogTitle, ListItem, ListItemButton, ListItemText, TextField} from "@mui/material";
 import {getMsg} from "../../utils/stringUtil";
 import {FixedSizeList} from "react-window";
@@ -7,16 +7,16 @@ import {useNavigate} from "react-router-dom";
 
 const DirectLoginModal = ({show, changeState}) => {
 
-    // TODO useEffect 로 최초에 전체 계정 검색해서 state로
-    const defaultArray = [
-        {name : 'test1'},
-        {name : 'test2'},
-        {name : 'test3'},
-        {name : 'test4'}
-    ]
+    const [userList, setUserList] = useState([]);
+    const [searchArray, setSearchArray] = useState([]);
 
-    const [searchArray, setSearchArray] = useState(defaultArray);
 
+    useEffect(() => {
+        axiosCall.get('manage/find/all/userlist','', function(returnData) {
+            setUserList(returnData);
+            setSearchArray(returnData);
+        });
+    }, [])
 
     /**
      * 계정 검색 시 이벤트
@@ -25,7 +25,9 @@ const DirectLoginModal = ({show, changeState}) => {
     const onSearchHandler = (e) => {
         const searchValue = e.currentTarget.value;
         let searchArray;
-        // TODO 계정 검색
+        searchArray = userList.filter(data => data.includes(searchValue))
+        if (searchValue === '') setSearchArray(userList);
+        else setSearchArray(searchArray);
     }
 
     /**
@@ -38,8 +40,10 @@ const DirectLoginModal = ({show, changeState}) => {
 
         return (
             <ListItem style={style} key={index}>
-                <ListItemButton onClick={(e) => {onListClickHandler(e, data[index])}}>
-                    <ListItemText primary={data[index].name} sx={{textAlign: 'center'}}/>
+                <ListItemButton onClick={(e) => {
+                    onListClickHandler(e, data[index])
+                }}>
+                    <ListItemText primary={data[index]} sx={{textAlign: 'center'}}/>
                 </ListItemButton>
             </ListItem>
         );
@@ -53,13 +57,14 @@ const DirectLoginModal = ({show, changeState}) => {
     const onListClickHandler = (e, value) => {
         customAlert({
             icon             : 'question',
-            title            : `${value.name} 계정으로 
+            title            : `${value} 계정으로 
                                 로그인 하시겠습니까?`,
             showCancelButton : true,
             confirmButtonText: 'OK',
             cancelButtonText : 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
+                // TODO 다이렉트 로그인 API 확인
                 const params = {};
                 window.close();
                 window.opener.location.replace("/");

@@ -15,7 +15,6 @@ const Main = () => {
 
     useEffect(() => {
         axiosCall.get(`portfolio/find/all/portfolio/${userInfo._id}`, '', function (returnData) {
-            console.log(returnData);
             setMainDollarMoney(returnData.portFolioDollarMoney);
             setMainWonMoney(returnData.portFolioWonMoney);
             setMainStockArray(getStockArray(returnData.portFolioDataList, coinData));
