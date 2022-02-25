@@ -9,7 +9,7 @@ import {getMsg, getReturnCode, getReturnData, getReturnMessage, makeUrlParameter
  */
 export const customAxios = axios.create({
     // TODO 도메인 받으면 적용.
-    baseURL: 'http://localhost:8080/api/v1',
+    baseURL: 'http://firestock.shop:8080/api/v1',
     timeout: 3000
 });
 
