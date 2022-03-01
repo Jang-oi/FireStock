@@ -19,7 +19,7 @@ const Main = () => {
             setMainWonMoney(returnData.portFolioWonMoney);
             setMainStockArray(getStockArray(returnData.portFolioDataList, coinData));
         })
-    }, [coinData, userInfo._id])
+    }, [coinData, userInfo._id]);
 
     /**
      * 자산 정리
@@ -47,6 +47,7 @@ const Main = () => {
 
     const assetArray = ['국내 주식', '해외 주식', '암호 화폐', '그 외 자산', '현금성 자산'];
     const assetSumArray = [mainDomesticMoney, mainOverseasMoney, mainCoinMoney, mainNonCurrentMoney, mainMoney];
+    console.log(assetSumArray);
 
     /**
      * 차트를 위한 옵션 및 데이터
@@ -64,7 +65,9 @@ const Main = () => {
             legend    : {
                 position : 'right',
                 formatter: function (val, opts) {
-                    return val + " - " + opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1) + "%";
+                    let rate = opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1)
+                    if (rate === 'NaN') rate = 0;
+                    return val + " - " + rate + "%";
                 }
             },
             responsive: [

@@ -156,7 +156,6 @@ const PortDetail = () => {
                 mt: 3
             },
         },
-        data       : {detailData},
         options    : {
             labels    : getArrayKey(detailData, 'stockName'),
             legend    : {
